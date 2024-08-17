@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse, HttpXhrBackend } from "@ngify/http";
 import { setupConfig } from "@ngify/http";
 import { Observable, catchError } from "rxjs";
 import { Endpoint, EndpointOptions, Environment } from "../interfaces/pipeline.interfaces.http";
-import { Logger } from "@arion/core";
+import { Logger } from "aethon-arion-core";
 
 var XMLHttpRequest = require("xhr2");
 

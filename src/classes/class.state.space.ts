@@ -1,4 +1,4 @@
-import { Utils } from "@arion/core";
+import { Utils } from "aethon-arion-core";
 import { StateSpacePointDTO } from "../interfaces/pipeline.interfaces.dto";
 import { StateSpacePoint } from "./class.state.space.point";
 

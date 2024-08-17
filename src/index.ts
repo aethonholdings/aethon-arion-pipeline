@@ -1,5 +1,5 @@
 // re-expore core classes for use in all dependent packages
-export * from '@arion/core';
+export * from 'aethon-arion-core';
 
 // classes
 export { Configurator } from './classes/class.configurator';

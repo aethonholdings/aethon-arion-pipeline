@@ -1,7 +1,7 @@
 {
   "name": "aethon-arion-pipeline",
   "version": "0.1.0",
-  "description": "The @arion data pipeline core assets",
+  "description": "The Arion data pipeline core DTOs and assets",
   "scripts": {
     "build": "tsc & cp package.json dist/",
     "watch": "tsc -w & nodemon -q -w dist dist/main.js",

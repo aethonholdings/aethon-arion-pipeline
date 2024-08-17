@@ -1,4 +1,4 @@
-import { Logger, RandomStreamFactory, Simulation, SimulationConfig } from "@arion/core";
+import { Logger, RandomStreamFactory, Simulation, SimulationConfig } from "aethon-arion-core";
 
 export abstract class SimulationFactory {
     name: string;
