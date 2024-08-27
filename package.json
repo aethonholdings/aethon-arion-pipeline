@@ -2,6 +2,7 @@
   "name": "aethon-arion-pipeline",
   "version": "0.1.1",
   "description": "The Arion data pipeline core DTOs and assets",
+  "repository": "github:aethonholdings/aethon-arion-pipeline",
   "scripts": {
     "build": "tsc & cp package.json README.md dist/",
     "watch": "tsc -w & nodemon -q -w dist dist/main.js",

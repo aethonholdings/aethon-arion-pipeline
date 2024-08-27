@@ -1,4 +1,4 @@
-# aethon-arion-db
+# aethon-arion-pipeline
 
 ## Description
 
