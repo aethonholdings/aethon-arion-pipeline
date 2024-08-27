@@ -1,6 +1,6 @@
 {
   "name": "aethon-arion-pipeline",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "The Arion data pipeline core DTOs and assets",
   "repository": "github:aethonholdings/aethon-arion-pipeline",
   "scripts": {
