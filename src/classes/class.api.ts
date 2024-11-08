@@ -1,10 +1,10 @@
-import { HttpClient, HttpErrorResponse, HttpXhrBackend } from "@ngify/http";
+import { HttpClient, HttpXhrBackend } from "@ngify/http";
 import { setupConfig } from "@ngify/http";
 import { Observable, catchError } from "rxjs";
 import { Endpoint, EndpointOptions, Environment } from "../interfaces/pipeline.interfaces.http";
 import { Logger } from "aethon-arion-core";
 
-var XMLHttpRequest = require("xhr2");
+const XMLHttpRequest = require("xhr2");
 
 export class Api {
     private _name: string = "API";
@@ -26,7 +26,7 @@ export class Api {
 
     request$(endpoint: Endpoint): Observable<any> {
         let json$: Observable<any> = new Observable<any>();
-        let url: string = this._baseUrl + endpoint.path;
+        const url: string = this._baseUrl + endpoint.path;
         switch (endpoint.method) {
             case "GET":
                 json$ = this._get$(url, endpoint.options);
@@ -72,12 +72,9 @@ export class Api {
     }
 
     private _handleError(error: any) {
-        let message: string;
-        let data: any;
-        message = error.message;
-        data = error;
+        const data: any = error;
+        const message: string = error.message;
         delete data?.error;
-        
-        this._logger.error({ sourceObject: this._name, message: message, data: data});
+        this._logger.error({ sourceObject: this._name, message: message, data: data });
     }
 }

@@ -7,8 +7,8 @@ export interface SimConfigDTO {
     simSetId?: number;
     orgConfigId: number;
     orgConfig?: OrgConfigDTO;
-    runCount: number,
-    days: number,
+    runCount: number;
+    days: number;
     randomStreamType: "static" | "random";
     start?: Date;
     end?: Date;

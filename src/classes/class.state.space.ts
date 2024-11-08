@@ -6,7 +6,7 @@ export class StateSpace extends Array<StateSpacePoint> {
     private _agentCount: number = 0;
 
     constructor(stateSpace: StateSpacePoint[] | StateSpacePointDTO[]) {
-        let tmp: StateSpacePoint[] = [];
+        const tmp: StateSpacePoint[] = [];
         stateSpace.forEach((stateSpacePoint) => {
             tmp.push(new StateSpacePoint(stateSpacePoint));
         });
@@ -20,7 +20,7 @@ export class StateSpace extends Array<StateSpacePoint> {
             agentSetStateProbabilities = Utils.tensor([this._agentCount, agentStatesArray.length], () => {
                 return 0;
             }) as number[][];
-            this.forEach((stateSpacePoint, stateSpacePointIndex) => {
+            this.forEach((stateSpacePoint) => {
                 stateSpacePoint.agentStates.forEach((agentState, agentIndex) => {
                     agentSetStateProbabilities[agentIndex][agentState]++;
                 });

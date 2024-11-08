@@ -18,7 +18,6 @@ export abstract class Configurator {
             name: this.name,
             modelType: this.modelType,
             description: this.description
-        }
-    };
-
+        };
+    }
 }

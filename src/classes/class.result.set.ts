@@ -20,7 +20,7 @@ export class ResultSet {
         } else {
             this.histogram = new Map<string, number>();
             const stateVectors: number[][] = [];
-            for (let result of this.results) {
+            for (const result of this.results) {
                 let stateVector = JSON.parse(JSON.stringify(result.board));
                 stateVector = stateVector.concat(result.agentStates);
                 stateVector = stateVector.concat(result.plant);
@@ -32,7 +32,7 @@ export class ResultSet {
             // find the min and max values for each state vector element
             this.histogramMax = JSON.parse(JSON.stringify(stateVectors[0]));
             this.histogramMin = JSON.parse(JSON.stringify(stateVectors[0]));
-            for (let stateVector of stateVectors) {
+            for (const stateVector of stateVectors) {
                 for (let i = 0; i < stateVector.length; i++) {
                     if (stateVector[i] < this.histogramMin[i]) this.histogramMin[i] = stateVector[i];
                     if (stateVector[i] > this.histogramMax[i]) this.histogramMax[i] = stateVector[i];
@@ -42,7 +42,7 @@ export class ResultSet {
 
             // count frequency of each state vector when quantised
             if (JSON.stringify(this.histogramMax) != JSON.stringify(this.histogramMin)) {
-                for (let stateVector of stateVectors) {
+                for (const stateVector of stateVectors) {
                     const indexVectorKey = JSON.stringify(this._quantiseStateVector(stateVector));
                     if (this.histogram.has(indexVectorKey)) {
                         this.histogram.set(indexVectorKey, (this.histogram.get(indexVectorKey) as number) + 1);
@@ -56,7 +56,7 @@ export class ResultSet {
             }
 
             // normalise to likelihood
-            for (let key of this.histogram.keys()) {
+            for (const key of this.histogram.keys()) {
                 this.histogram.set(key, (this.histogram.get(key) as number) / stateVectors.length);
             }
         }
@@ -83,7 +83,7 @@ export class ResultSet {
     getEntropy(): number | null {
         if (this.histogram) {
             let entropy: number = 0;
-            for (let likelihood of this.histogram.values()) {
+            for (const likelihood of this.histogram.values()) {
                 entropy += likelihood * Math.log2(likelihood);
             }
             return -entropy;
@@ -93,7 +93,7 @@ export class ResultSet {
 
     getPerformance(): { avgPerformance: number | null; stDevPerformance: number | null } {
         const performanceVector: number[] = [];
-        for (let result of this.results) {
+        for (const result of this.results) {
             if (result?.performance) {
                 performanceVector.push(result.performance);
             } else {
