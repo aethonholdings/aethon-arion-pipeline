@@ -34,3 +34,4 @@ export { ReportDTO } from './interfaces/pipeline.interfaces.dto';
 // types
 export { HttpMethod } from './types/pipeline.types';
 export { StateType } from './types/pipeline.types';
+export { RandomStreamType } from './types/pipeline.types';
