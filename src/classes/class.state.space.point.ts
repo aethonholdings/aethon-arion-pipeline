@@ -1,6 +1,6 @@
 import { StateSpacePointDTO } from "../interfaces/pipeline.interfaces.dto";
 
-export class StateSpacePoint implements StateSpacePointDTO {
+export class StateSpacePoint<T> implements StateSpacePointDTO<T> {
     clockTick: number;
     plant: number[];
     agentStates: number[];
@@ -8,7 +8,7 @@ export class StateSpacePoint implements StateSpacePointDTO {
     board: number[];
     reporting: number[];
 
-    constructor(stateSpacePointDTO: StateSpacePointDTO) {
+    constructor(stateSpacePointDTO: StateSpacePointDTO<T>) {
         this.clockTick = stateSpacePointDTO.clockTick;
         this.plant = stateSpacePointDTO.plant;
         this.agentStates = stateSpacePointDTO.agentStates;
@@ -21,7 +21,7 @@ export class StateSpacePoint implements StateSpacePointDTO {
         return JSON.parse(JSON.stringify(this));
     }
 
-    toDTO(): StateSpacePointDTO {
-        return this as unknown as StateSpacePointDTO;
+    toDTO(): StateSpacePointDTO<T> {
+        return this as unknown as StateSpacePointDTO<T>;
     }
 }

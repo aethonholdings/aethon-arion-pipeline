@@ -1,30 +1,30 @@
-import { StateType } from "../types/pipeline.types";
+import { RandomStreamType, StateType } from "../types/pipeline.types";
 
 // generic data pipeline DTOs
-export interface SimConfigDTO {
+export interface SimConfigDTO<T> {
     id?: number;
-    simSet?: SimSetDTO;
+    simSet?: SimSetDTO<T>;
     simSetId?: number;
     orgConfigId: number;
-    orgConfig?: OrgConfigDTO;
+    orgConfig?: OrgConfigDTO<T>;
     runCount: number;
     days: number;
-    randomStreamType: "static" | "random";
+    randomStreamType: RandomStreamType;
     start?: Date;
     end?: Date;
     durationSec?: number;
     avgPerformance?: number;
     stdDevPerformance?: number;
     entropy?: number;
-    results?: ResultDTO[];
+    results?: ResultDTO<T>[];
     debug?: string[];
     state?: StateType;
 }
 
-export interface SimSetDTO {
+export interface SimSetDTO<T> {
     id?: number;
     description: string;
-    simConfigs: SimConfigDTO[];
+    simConfigs: SimConfigDTO<T>[];
     type: string;
     state?: StateType;
     simConfigCount?: number;
@@ -32,7 +32,7 @@ export interface SimSetDTO {
     completedSimConfigCount?: number;
 }
 
-export interface OrgConfigDTO {
+export interface OrgConfigDTO<T> {
     id?: number;
     type: string;
     clockTickSeconds: number;
@@ -45,8 +45,8 @@ export interface OrgConfigDTO {
     influenceIntensity: number;
     judgmentIntensity: number;
     incentiveIntensity: number;
-    configuratorParams: ConfiguratorParamsDTO;
-    simConfigs?: SimConfigDTO[];
+    configuratorParams: ConfiguratorParamsDTO<T>;
+    simConfigs?: SimConfigDTO<T>[];
     configuratorName?: string;
 }
 
@@ -63,10 +63,10 @@ export interface AgentSetTensorsDTO {
     incentiveTensor: number[][][][];
 }
 
-export interface StateSpacePointDTO {
+export interface StateSpacePointDTO<T> {
     id?: number;
     resultId?: number;
-    result?: ResultDTO;
+    result?: ResultDTO<T>;
     clockTick: number;
     board: number[];
     agentStates: number[];
@@ -75,12 +75,12 @@ export interface StateSpacePointDTO {
     reporting: number[];
 }
 
-export interface ResultDTO {
+export interface ResultDTO<T> {
     id?: number;
     simConfigId?: number;
     orgConfigId?: number;
     simSetId?: number;
-    simConfig?: SimConfigDTO;
+    simConfig?: SimConfigDTO<T>;
     runCount: number;
     nodeId: string;
     start: Date;
@@ -93,11 +93,11 @@ export interface ResultDTO {
     reporting: number[];
     priorityIntensity?: number;
     performance?: number;
-    stateSpace?: StateSpacePointDTO[];
+    stateSpace?: StateSpacePointDTO<T>[];
     agentCount?: number;
     orgConfigType?: string;
     configuratorName?: string;
-    configuratorParams?: ConfiguratorParamsDTO;
+    configuratorParams?: ConfiguratorParamsDTO<T>;
 }
 
 // Configurator DTOs
@@ -107,13 +107,12 @@ export interface ConfiguratorSignatureDTO {
     description: string;
 }
 
-export interface ConfiguratorParamsDTO {
+export interface ConfiguratorParamsDTO<T> {
     configuratorName: string;
-    data: any;
+    data: T;
 }
 
 // report DTOs
-
 export interface VariableDTO {
     name: string;
     reporting: number;
