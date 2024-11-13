@@ -1,6 +1,6 @@
 import { ConfiguratorSignatureDTO, OrgConfigDTO } from "../interfaces/pipeline.interfaces.dto";
 
-export abstract class Configurator<T> {
+export abstract class Configurator {
     name: string;
     modelType: string;
     description: string = "";
@@ -11,7 +11,7 @@ export abstract class Configurator<T> {
         this.description = configuratorSignature.description;
     }
 
-    abstract generate(params: any): OrgConfigDTO<T>;
+    abstract generate(params: any): OrgConfigDTO;
 
     getSignature(): ConfiguratorSignatureDTO {
         return {

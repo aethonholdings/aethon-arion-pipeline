@@ -1,12 +1,13 @@
-import { RandomStreamType, StateType } from "../types/pipeline.types";
+import { ConfiguratorParamData, RandomStreamType, StateType } from "../types/pipeline.types";
 
 // generic data pipeline DTOs
-export interface SimConfigDTO<T> {
+export interface SimConfigDTO {
     id?: number;
-    simSet?: SimSetDTO<T>;
+    simConfigParamsDTO?: SimConfigParamsDTO;
+    simSet?: SimSetDTO;
     simSetId?: number;
     orgConfigId: number;
-    orgConfig?: OrgConfigDTO<T>;
+    orgConfig?: OrgConfigDTO;
     runCount: number;
     days: number;
     randomStreamType: RandomStreamType;
@@ -16,15 +17,23 @@ export interface SimConfigDTO<T> {
     avgPerformance?: number;
     stdDevPerformance?: number;
     entropy?: number;
-    results?: ResultDTO<T>[];
+    results?: ResultDTO[];
     debug?: string[];
     state?: StateType;
 }
 
-export interface SimSetDTO<T> {
+export interface SimConfigParamsDTO {
+    id?: number;
+    convergenceTests: ConvergenceTestDTO[];
+    simConfigs: SimConfigDTO[];
+    days: number;
+    randomStreamType: RandomStreamType;
+}
+
+export interface SimSetDTO {
     id?: number;
     description: string;
-    simConfigs: SimConfigDTO<T>[];
+    simConfigs: SimConfigDTO[];
     type: string;
     state?: StateType;
     simConfigCount?: number;
@@ -32,29 +41,29 @@ export interface SimSetDTO<T> {
     completedSimConfigCount?: number;
 }
 
-export interface OrgConfigDTO<T> {
+export interface OrgConfigDTO {
     id?: number;
     type: string;
     clockTickSeconds: number;
     agentCount: number;
-    board: BoardDTO<T>;
+    board: BoardDTO;
     agentSet: AgentSetTensorsDTO;
-    plant: PlantDTO<T>;
-    reporting: ReportingDTO<T>;
+    plant: PlantDTO;
+    reporting: ReportingDTO;
     priorityIntensity: number;
     influenceIntensity: number;
     judgmentIntensity: number;
     incentiveIntensity: number;
-    configuratorParams: ConfiguratorParamsDTO<T>;
-    simConfigs?: SimConfigDTO<T>[];
+    configuratorParams: ConfiguratorParamsDTO;
+    simConfigs?: SimConfigDTO[];
     configuratorName?: string;
 }
 
-export interface BoardDTO<T> {}
+export interface BoardDTO {}
 
-export interface PlantDTO<T> {}
+export interface PlantDTO {}
 
-export interface ReportingDTO<T> {}
+export interface ReportingDTO {}
 
 export interface AgentSetTensorsDTO {
     priorityTensor: number[][][];
@@ -63,10 +72,10 @@ export interface AgentSetTensorsDTO {
     incentiveTensor: number[][][][];
 }
 
-export interface StateSpacePointDTO<T> {
+export interface StateSpacePointDTO {
     id?: number;
     resultId?: number;
-    result?: ResultDTO<T>;
+    result?: ResultDTO;
     clockTick: number;
     board: number[];
     agentStates: number[];
@@ -75,12 +84,12 @@ export interface StateSpacePointDTO<T> {
     reporting: number[];
 }
 
-export interface ResultDTO<T> {
+export interface ResultDTO {
     id?: number;
     simConfigId?: number;
     orgConfigId?: number;
     simSetId?: number;
-    simConfig?: SimConfigDTO<T>;
+    simConfig?: SimConfigDTO;
     runCount: number;
     nodeId: string;
     start: Date;
@@ -93,11 +102,32 @@ export interface ResultDTO<T> {
     reporting: number[];
     priorityIntensity?: number;
     performance?: number;
-    stateSpace?: StateSpacePointDTO<T>[];
+    stateSpace?: StateSpacePointDTO[];
     agentCount?: number;
     orgConfigType?: string;
     configuratorName?: string;
-    configuratorParams?: ConfiguratorParamsDTO<T>;
+    configuratorParams?: ConfiguratorParamsDTO;
+}
+
+export interface ConvergenceTestDTO {
+    id?: number;
+    simConfigParams: SimConfigParamsDTO;
+    configuratorParams: ConfiguratorParamsDTO;
+    orgConfigCount: number;
+    simConfigCount: number;
+    completedSimConfigCount: number;
+    resultCount: number;
+    dispatchedRuns: number;
+    avgPerformance: number;
+    stdDevPerformance: number;
+    processingTimeSec: number;
+    state: StateType;
+}
+
+// ModelDTOs
+export interface ModelDTO {
+    id: string;
+    homeUrl?: string;
 }
 
 // Configurator DTOs
@@ -107,9 +137,9 @@ export interface ConfiguratorSignatureDTO {
     description: string;
 }
 
-export interface ConfiguratorParamsDTO<T> {
+export interface ConfiguratorParamsDTO {
     configuratorName: string;
-    data: T;
+    data: ConfiguratorParamData;
 }
 
 // report DTOs

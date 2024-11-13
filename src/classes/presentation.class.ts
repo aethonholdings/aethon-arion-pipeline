@@ -1,7 +1,7 @@
 import { ReportDTO, ResultDTO, VariableDTO } from "../interfaces/pipeline.interfaces.dto";
 
-export class Presentation<T> {
-    protected resultDTO: ResultDTO<T>;
+export class Presentation {
+    protected resultDTO: ResultDTO;
     variables: Map<string, VariableDTO> = new Map();
     reports: ReportDTO[] = [];
     reportingVariableArray: string[] = [];
@@ -11,7 +11,7 @@ export class Presentation<T> {
     targetPriorityTensor: number[][][] = [];
     deltaTensor: number[][][] = [];
 
-    constructor(resultDTO: ResultDTO<T>) {
+    constructor(resultDTO: ResultDTO) {
         this.resultDTO = resultDTO;
     }
 

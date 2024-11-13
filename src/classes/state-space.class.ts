@@ -1,12 +1,12 @@
 import { Utils } from "aethon-arion-core";
 import { StateSpacePointDTO } from "../interfaces/pipeline.interfaces.dto";
-import { StateSpacePoint } from "./class.state.space.point";
+import { StateSpacePoint } from "./state-space-point.class";
 
-export class StateSpace<T> extends Array<StateSpacePoint<T>> {
+export class StateSpace<T> extends Array<StateSpacePoint> {
     private _agentCount: number = 0;
 
-    constructor(stateSpace: StateSpacePoint<T>[] | StateSpacePointDTO<T>[]) {
-        const tmp: StateSpacePoint<T>[] = [];
+    constructor(stateSpace: StateSpacePoint[] | StateSpacePointDTO[]) {
+        const tmp: StateSpacePoint[] = [];
         stateSpace.forEach((stateSpacePoint) => {
             tmp.push(new StateSpacePoint(stateSpacePoint));
         });
@@ -82,7 +82,7 @@ export class StateSpace<T> extends Array<StateSpacePoint<T>> {
         return JSON.parse(JSON.stringify(this));
     }
 
-    toDTO(): StateSpacePointDTO<T> {
-        return this as unknown as StateSpacePointDTO<T>;
+    toDTO(): StateSpacePointDTO {
+        return this as unknown as StateSpacePointDTO;
     }
 }
