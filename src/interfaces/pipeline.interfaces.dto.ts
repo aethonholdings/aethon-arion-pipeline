@@ -37,10 +37,10 @@ export interface OrgConfigDTO<T> {
     type: string;
     clockTickSeconds: number;
     agentCount: number;
-    board: BoardDTO;
+    board: BoardDTO<T>;
     agentSet: AgentSetTensorsDTO;
-    plant: PlantDTO;
-    reporting: ReportingDTO;
+    plant: PlantDTO<T>;
+    reporting: ReportingDTO<T>;
     priorityIntensity: number;
     influenceIntensity: number;
     judgmentIntensity: number;
@@ -50,11 +50,11 @@ export interface OrgConfigDTO<T> {
     configuratorName?: string;
 }
 
-export interface BoardDTO {}
+export interface BoardDTO<T> {}
 
-export interface PlantDTO {}
+export interface PlantDTO<T> {}
 
-export interface ReportingDTO {}
+export interface ReportingDTO<T> {}
 
 export interface AgentSetTensorsDTO {
     priorityTensor: number[][][];
