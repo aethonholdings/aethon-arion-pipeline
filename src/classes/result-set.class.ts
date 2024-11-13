@@ -1,6 +1,6 @@
-import { ResultDTO } from "../interfaces/pipeline.interfaces.dto";
+import { ResultDTO } from "../interfaces/dto.interfaces";
 
-export class ResultSet<T> {
+export class ResultSet {
     protected results: ResultDTO[];
     protected histogramBinCount: number;
     private histogram: Map<string, number> | null;

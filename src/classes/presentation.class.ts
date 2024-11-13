@@ -1,4 +1,5 @@
-import { ReportDTO, ResultDTO, VariableDTO } from "../interfaces/pipeline.interfaces.dto";
+import { ResultDTO } from "../interfaces/dto.interfaces";
+import { ReportDTO, VariableDTO } from "../interfaces/report.interfaces";
 
 export class Presentation {
     protected resultDTO: ResultDTO;

@@ -124,38 +124,8 @@ export interface ConvergenceTestDTO {
     state: StateType;
 }
 
-// ModelDTOs
-export interface ModelDTO {
-    id: string;
-    homeUrl?: string;
-}
-
-// Configurator DTOs
-export interface ConfiguratorSignatureDTO {
-    name: string;
-    modelType: string;
-    description: string;
-}
-
 export interface ConfiguratorParamsDTO {
+    model: string;
     configuratorName: string;
     data: ConfiguratorParamData;
-}
-
-// report DTOs
-export interface VariableDTO {
-    name: string;
-    reporting: number;
-    plan: number;
-}
-
-export interface ReportLineItemDTO {
-    class: string;
-    operator: string;
-    values: VariableDTO;
-}
-
-export interface ReportDTO {
-    name: string;
-    lineItems: ReportLineItemDTO[];
 }

@@ -1,4 +1,4 @@
-import { StateSpacePointDTO } from "../interfaces/pipeline.interfaces.dto";
+import { StateSpacePointDTO } from "../interfaces/dto.interfaces";
 
 export class StateSpacePoint implements StateSpacePointDTO {
     clockTick: number;

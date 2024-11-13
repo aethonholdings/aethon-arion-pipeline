@@ -1,23 +1,19 @@
-import { ConfiguratorSignatureDTO, OrgConfigDTO } from "../interfaces/pipeline.interfaces.dto";
+import { OrgConfigDTO } from "../interfaces/dto.interfaces";
+import { ConfiguratorParamData } from "../types/pipeline.types";
+import { Model } from "./model.class";
 
-export abstract class Configurator {
-    name: string;
-    modelType: string;
-    description: string = "";
+export abstract class Configurator<T extends Model> {
+    protected name: string;
+    protected model: T;
 
-    constructor(configuratorSignature: ConfiguratorSignatureDTO) {
-        this.name = configuratorSignature.name;
-        this.modelType = configuratorSignature.modelType;
-        this.description = configuratorSignature.description;
+    constructor(model: T, name: string) {
+        this.model = model;
+        this.name = name;
     }
 
-    abstract generate(params: any): OrgConfigDTO;
+    abstract generate(configuratorParamData: ConfiguratorParamData): OrgConfigDTO;
 
-    getSignature(): ConfiguratorSignatureDTO {
-        return {
-            name: this.name,
-            modelType: this.modelType,
-            description: this.description
-        };
+    getModel(): T {
+        return this.model;
     }
 }

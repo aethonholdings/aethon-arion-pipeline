@@ -1,22 +1,19 @@
 import { HttpClient, HttpXhrBackend } from "@ngify/http";
 import { setupConfig } from "@ngify/http";
 import { Observable, catchError } from "rxjs";
-import { Endpoint, EndpointOptions, Environment } from "../interfaces/pipeline.interfaces.http";
 import { Logger } from "aethon-arion-core";
+import { API, APIRequest, APIRequestOptions, HttpMethod } from "aethon-api-types";
 
 const XMLHttpRequest = require("xhr2");
 
 export class Api {
     private _name: string = "API";
     private _http: HttpClient;
-    private _environment: Environment;
-    private _baseUrl: string;
+    private _api: API;
     private _logger: Logger;
 
-    constructor(environment: Environment, logger: Logger) {
-        this._environment = environment;
-        this._baseUrl = this._environment.hostname;
-        if (this._environment?.port) this._baseUrl = this._baseUrl + ":" + this._environment.port;
+    constructor(api: API, logger: Logger) {
+        this._api = api;
         setupConfig({
             backend: new HttpXhrBackend(() => new XMLHttpRequest())
         });
@@ -24,23 +21,26 @@ export class Api {
         this._logger = logger;
     }
 
-    request$(endpoint: Endpoint): Observable<any> {
+    request$(operationId: string, options: APIRequestOptions): Observable<any> {
+        const request: APIRequest | undefined = this._api.getRequest(operationId, options);
         let json$: Observable<any> = new Observable<any>();
-        const url: string = this._baseUrl + endpoint.path;
-        switch (endpoint.method) {
-            case "GET":
-                json$ = this._get$(url, endpoint.options);
-                break;
-            case "POST":
-                json$ = this._post$(url, endpoint.options);
-                break;
-            case "PATCH":
-                json$ = this._patch$(url, endpoint.options);
-                break;
-            case "DELETE":
-                json$ = this._delete$(url, endpoint.options);
-                break;
+        if(request) {
+            switch (request.endpoint.method) {
+                case HttpMethod.GET:
+                    json$ = this._get$(request);
+                    break;
+                case HttpMethod.POST:
+                    json$ = this._post$(request);
+                    break;
+                case HttpMethod.PATCH:
+                    json$ = this._patch$(request);
+                    break;
+                case HttpMethod.DELETE:
+                    json$ = this._delete$(request);
+                    break;
+            }
         }
+        
         return json$.pipe(
             catchError((error, caught) => {
                 this._handleError(error);
@@ -49,26 +49,20 @@ export class Api {
         );
     }
 
-    private _get$(url: string, options: EndpointOptions | null) {
-        if (options?.id) url = url + "/" + options?.id;
-        const queryParams: any = {};
-        if (options?.params) queryParams.params = options.params;
-        if (options?.query) queryParams.query = options.query;
-        return this._http.get(url, queryParams);
+    private _get$(request: APIRequest): Observable<ArrayBuffer> {
+        return this._http.get(request.getURL());
     }
 
-    private _post$(url: string, options: EndpointOptions | null) {
-        return this._http.post(url, options?.body, {});
+    private _post$(request: APIRequest): Observable<ArrayBuffer> {
+        return this._http.post(request.getURL(), request.options?.body, {});
     }
 
-    private _delete$(url: string, options: EndpointOptions | null) {
-        if (options?.id) url = url + "/" + options?.id;
-        return this._http.delete(url, {});
+    private _delete$(request: APIRequest): Observable<ArrayBuffer> {
+        return this._http.delete(request.getURL(), {});
     }
 
-    private _patch$(url: string, options: EndpointOptions | null) {
-        if (options?.id) url = url + "/" + options?.id;
-        return this._http.patch(url, options?.body, {});
+    private _patch$(request: APIRequest): Observable<ArrayBuffer> {
+        return this._http.patch(request.getURL(), request.options?.body);
     }
 
     private _handleError(error: any) {

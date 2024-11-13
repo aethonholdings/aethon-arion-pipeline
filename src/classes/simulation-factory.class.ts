@@ -1,10 +1,11 @@
 import { Logger, RandomStreamFactory, Simulation, SimulationConfig } from "aethon-arion-core";
+import { Model } from "./model.class";
 
-export abstract class SimulationFactory {
-    name: string;
+export abstract class SimulationFactory<T extends Model> {
+    protected _model: T;
 
-    constructor(name: string) {
-        this.name = name;
+    constructor(model: T) {
+        this._model = model;
     }
 
     abstract newSimulation(
@@ -13,7 +14,7 @@ export abstract class SimulationFactory {
         randomStreamFactory: RandomStreamFactory
     ): Simulation;
 
-    getName(): string {
-        return this.name;
+    get model(): T {
+        return this._model;
     }
 }
