@@ -1,5 +1,5 @@
-import { ConfiguratorParamsDTO, ResultDTO, SimConfigDTO } from "../interfaces/dto.interfaces";
-import { ResultReportDTO } from "../interfaces/report.interfaces";
+import { ConfiguratorParamsDTO, ResultDTO, SimConfigDTO } from "../../interfaces/dto.interfaces";
+import { ResultReportDTO } from "../../interfaces/report.interfaces";
 import { StateSpace } from "./state-space.class";
 
 export abstract class Result implements ResultDTO {

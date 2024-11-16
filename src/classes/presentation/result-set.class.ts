@@ -1,5 +1,5 @@
-import { ResultDTO } from "../interfaces/dto.interfaces";
-import { Result } from "./result.class";
+import { ResultDTO } from "../../interfaces/dto.interfaces";
+import { Result } from "../presentation/result.class";
 
 export class ResultSet {
     protected results: ResultDTO[];

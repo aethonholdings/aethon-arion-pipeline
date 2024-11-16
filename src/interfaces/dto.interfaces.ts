@@ -125,7 +125,7 @@ export interface ConvergenceTestDTO {
 }
 
 export interface ConfiguratorParamsDTO {
-    model: string;
+    modelName: string;
     configuratorName: string;
     data: ConfiguratorParamData;
 }

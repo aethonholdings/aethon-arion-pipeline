@@ -6,26 +6,27 @@ import {
     ResultDTO,
     SimConfigDTO,
     StateSpacePointDTO
-} from "../interfaces/dto.interfaces";
+} from "../../interfaces/dto.interfaces";
 import { map, Observable, reduce } from "rxjs";
+import { Result } from "../presentation/result.class";
 
 export abstract class Model {
     protected name: string;
-    protected abstract configurators: Configurator<Model>[];
+    protected abstract configurators: Configurator[];
 
     constructor(name: string) {
         this.name = name;
     }
 
     run$(
-        simConfig: SimConfigDTO,
+        simConfigDTO: SimConfigDTO,
         randomStreamFactory: RandomStreamFactory,
         logger: Logger,
         calculationNodeId: string,
         saveStateSpace: boolean = false
     ): Observable<ResultDTO> {
         const startTime = new Date();
-        const simulation = this.getNewSimulation(simConfig, logger, randomStreamFactory);
+        const simulation = this.createSimulation(simConfigDTO, logger, randomStreamFactory);
         let organisation: Organisation;
         let clockTick: number = 0;
         return simulation.run$().pipe(
@@ -48,8 +49,8 @@ export abstract class Model {
             map((results: StateSpacePointDTO[]) => {
                 const endTime = new Date();
                 const resultDTO = {
-                    simConfigId: simConfig.id,
-                    runCount: simConfig.runCount,
+                    simConfigId: simConfigDTO.id,
+                    runCount: simConfigDTO.runCount,
                     nodeId: calculationNodeId,
                     start: startTime,
                     end: endTime,
@@ -68,26 +69,30 @@ export abstract class Model {
         );
     }
 
-    getNewSimulation(simConfigDTO: SimConfigDTO, logger: Logger, randomStreamFactory: RandomStreamFactory): Simulation {
+    createSimulation(simConfigDTO: SimConfigDTO, logger: Logger, randomStreamFactory: RandomStreamFactory): Simulation {
         const simulationConfig = {
             days: simConfigDTO.days,
             debug: [],
             randomStreamType: simConfigDTO.randomStreamType,
             orgConfig: simConfigDTO.orgConfig
         } as SimulationConfig;
-        if (simConfigDTO.orgConfig)
+        if(simConfigDTO.orgConfig) {
+            const simConfig = simConfigDTO as SimulationConfig;
+            const organisation = this.createNewOrganisationInstance(simConfig, randomStreamFactory, logger);
             return new Simulation(
                 simulationConfig,
                 logger,
                 randomStreamFactory,
-                this.getNewOrganisation(simConfigDTO, randomStreamFactory, logger)
+                organisation
             );
-        throw new Error(`No orgConfig found for simConfigDTO ${simConfigDTO.id}`);
+        } else {
+            throw new Error(`No orgConfig found for simConfigDTO ${simConfigDTO.id}`);
+        }
     }
 
     generateOrgConfigDTO(configuratorParamsDTO: ConfiguratorParamsDTO): OrgConfigDTO {
-        let configurator: Configurator<Model> | undefined = this.configurators.find(
-            (configurator: Configurator<Model>) => {
+        let configurator: Configurator | undefined = this.configurators.find(
+            (configurator: Configurator) => {
                 return configurator.name === configuratorParamsDTO.configuratorName;
             }
         );
@@ -101,8 +106,10 @@ export abstract class Model {
 
     abstract getPerformance(resultDTO: ResultDTO): number | undefined;
 
-    protected abstract getNewOrganisation(
-        simConfigDTO: SimConfigDTO,
+    abstract createResult(resultDTO: ResultDTO): Result;
+
+    protected abstract createNewOrganisationInstance(
+        simConfig: SimulationConfig,
         randomStreamFactory: RandomStreamFactory,
         logger: Logger
     ): Organisation;

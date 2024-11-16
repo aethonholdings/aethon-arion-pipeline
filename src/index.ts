@@ -9,11 +9,11 @@ export * from "./interfaces/dto.interfaces"; // core
 export * from "./interfaces/report.interfaces"; // report
 
 // classes
-export * from "./classes/api.class"
-export * from "./classes/configurator.class"; 
-export * from "./classes/model.class"; 
-export * from "./classes/result.class"
-export * from "./classes/result-set.class"
-export * from "./classes/state-space-point.class";
-export * from "./classes/state-space.class";
+export * from "./classes/api/api.class"
+export * from "./classes/model/configurator.class"; 
+export * from "./classes/model/model.class"; 
+export * from "./classes/presentation/result-set.class"
+export * from "./classes/presentation/result.class"
+export * from "./classes/presentation/state-space-point.class";
+export * from "./classes/presentation/state-space.class";
 

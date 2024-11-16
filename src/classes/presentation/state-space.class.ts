@@ -1,5 +1,5 @@
 import { Utils } from "aethon-arion-core";
-import { StateSpacePointDTO } from "../interfaces/dto.interfaces";
+import { StateSpacePointDTO } from "../../interfaces/dto.interfaces";
 import { StateSpacePoint } from "./state-space-point.class";
 
 export class StateSpace extends Array<StateSpacePoint> {
