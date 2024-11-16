@@ -1,6 +1,12 @@
 import { Logger, Organisation, RandomStreamFactory, Simulation, SimulationConfig, StepOutput } from "aethon-arion-core";
 import { Configurator } from "./configurator.class";
-import { ConfiguratorParamsDTO, OrgConfigDTO, ResultDTO, SimConfigDTO, StateSpacePointDTO } from "../interfaces/dto.interfaces";
+import {
+    ConfiguratorParamsDTO,
+    OrgConfigDTO,
+    ResultDTO,
+    SimConfigDTO,
+    StateSpacePointDTO
+} from "../interfaces/dto.interfaces";
 import { map, Observable, reduce } from "rxjs";
 
 export abstract class Model {
@@ -69,13 +75,20 @@ export abstract class Model {
             randomStreamType: simConfigDTO.randomStreamType,
             orgConfig: simConfigDTO.orgConfig
         } as SimulationConfig;
-        return new Simulation(simulationConfig, logger, randomStreamFactory, this.getNewOrganisation(simConfigDTO));
+        return new Simulation(
+            simulationConfig,
+            logger,
+            randomStreamFactory,
+            this.getNewOrganisation(simConfigDTO, randomStreamFactory, logger)
+        );
     }
 
     generateOrgConfigDTO(configuratorParamsDTO: ConfiguratorParamsDTO): OrgConfigDTO {
-        let configurator: Configurator<Model> | undefined = this.configurators.find((configurator: Configurator<Model>) => {
-            return configurator.name === configuratorParamsDTO.configuratorName;
-        });
+        let configurator: Configurator<Model> | undefined = this.configurators.find(
+            (configurator: Configurator<Model>) => {
+                return configurator.name === configuratorParamsDTO.configuratorName;
+            }
+        );
         if (configurator) return configurator.generate(configuratorParamsDTO);
         throw new Error(`Configurator ${configuratorParamsDTO.configuratorName} not found for model ${this.name}`);
     }
@@ -86,5 +99,9 @@ export abstract class Model {
 
     abstract getPerformance(resultDTO: ResultDTO): number | undefined;
 
-    protected abstract getNewOrganisation(simConfigDTO: SimConfigDTO): Organisation;
+    protected abstract getNewOrganisation(
+        simConfigDTO: SimConfigDTO,
+        randomStreamFactory: RandomStreamFactory,
+        logger: Logger
+    ): Organisation;
 }
