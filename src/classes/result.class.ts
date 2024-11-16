@@ -57,7 +57,7 @@ export abstract class Result implements ResultDTO {
         return this;
     }
 
-    abstract getPerformance(params: any): number;
+    abstract getPerformance(params?: any): number;
 
     abstract getResultReport(): ResultReportDTO;
 }

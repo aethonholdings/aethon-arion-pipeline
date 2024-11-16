@@ -75,12 +75,14 @@ export abstract class Model {
             randomStreamType: simConfigDTO.randomStreamType,
             orgConfig: simConfigDTO.orgConfig
         } as SimulationConfig;
-        return new Simulation(
-            simulationConfig,
-            logger,
-            randomStreamFactory,
-            this.getNewOrganisation(simConfigDTO, randomStreamFactory, logger)
-        );
+        if (simConfigDTO.orgConfig)
+            return new Simulation(
+                simulationConfig,
+                logger,
+                randomStreamFactory,
+                this.getNewOrganisation(simConfigDTO, randomStreamFactory, logger)
+            );
+        throw new Error(`No orgConfig found for simConfigDTO ${simConfigDTO.id}`);
     }
 
     generateOrgConfigDTO(configuratorParamsDTO: ConfiguratorParamsDTO): OrgConfigDTO {
