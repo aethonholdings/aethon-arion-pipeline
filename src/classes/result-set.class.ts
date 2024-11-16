@@ -1,4 +1,5 @@
 import { ResultDTO } from "../interfaces/dto.interfaces";
+import { Result } from "./result.class";
 
 export class ResultSet {
     protected results: ResultDTO[];
@@ -8,7 +9,7 @@ export class ResultSet {
     private histogramMax: number[];
     private histogramBinSizes: number[];
 
-    constructor(results: ResultDTO[], histogramBinCount: number = 100) {
+    constructor(results: Result[] | ResultDTO[], histogramBinCount: number = 100) {
         this.results = results;
         this.histogramBinCount = histogramBinCount;
         this.histogramMax = [];

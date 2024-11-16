@@ -12,9 +12,8 @@ export * from "./interfaces/report.interfaces"; // report
 export * from "./classes/api.class"
 export * from "./classes/configurator.class"; 
 export * from "./classes/model.class"; 
-export * from "./classes/presentation.class"
+export * from "./classes/result.class"
 export * from "./classes/result-set.class"
-export * from "./classes/simulation-factory.class"
 export * from "./classes/state-space-point.class";
 export * from "./classes/state-space.class";
 

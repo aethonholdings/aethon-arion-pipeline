@@ -15,3 +15,14 @@ export interface ReportDTO {
     name: string;
     lineItems: ReportLineItemDTO[];
 }
+
+export interface ResultReportDTO {
+    variables: Map<string, VariableDTO>;
+    reports: ReportDTO[];
+    reportingVariableArray: string[];
+    plantStateVariableArray: string[];
+    targetPriorityTensor: number[][][];
+    deltaTensor: number[][][];
+}
+
+

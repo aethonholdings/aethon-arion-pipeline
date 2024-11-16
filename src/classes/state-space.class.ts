@@ -2,12 +2,12 @@ import { Utils } from "aethon-arion-core";
 import { StateSpacePointDTO } from "../interfaces/dto.interfaces";
 import { StateSpacePoint } from "./state-space-point.class";
 
-export class StateSpace<T> extends Array<StateSpacePoint> {
+export class StateSpace extends Array<StateSpacePoint> {
     private _agentCount: number = 0;
 
-    constructor(stateSpace: StateSpacePoint[] | StateSpacePointDTO[]) {
+    constructor(stateSpace: StateSpacePoint[] | StateSpacePointDTO[] | undefined) {
         const tmp: StateSpacePoint[] = [];
-        stateSpace.forEach((stateSpacePoint) => {
+        if(stateSpace) stateSpace.forEach((stateSpacePoint) => {
             tmp.push(new StateSpacePoint(stateSpacePoint));
         });
         super(...tmp);
