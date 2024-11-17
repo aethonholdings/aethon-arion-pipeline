@@ -9,6 +9,7 @@ import {
 } from "../../interfaces/dto.interfaces";
 import { map, Observable, reduce } from "rxjs";
 import { Result } from "../presentation/result.class";
+import hash from "object-hash";
 
 export abstract class Model {
     protected name: string;
@@ -76,32 +77,29 @@ export abstract class Model {
             randomStreamType: simConfigDTO.randomStreamType,
             orgConfig: simConfigDTO.orgConfig
         } as SimulationConfig;
-        if(simConfigDTO.orgConfig) {
+        if (simConfigDTO.orgConfig) {
             const simConfig = simConfigDTO as SimulationConfig;
             const organisation = this.createNewOrganisationInstance(simConfig, randomStreamFactory, logger);
-            return new Simulation(
-                simulationConfig,
-                logger,
-                randomStreamFactory,
-                organisation
-            );
+            return new Simulation(simulationConfig, logger, randomStreamFactory, organisation);
         } else {
             throw new Error(`No orgConfig found for simConfigDTO ${simConfigDTO.id}`);
         }
     }
 
     generateOrgConfigDTO(configuratorParamsDTO: ConfiguratorParamsDTO): OrgConfigDTO {
-        let configurator: Configurator | undefined = this.configurators.find(
-            (configurator: Configurator) => {
-                return configurator.name === configuratorParamsDTO.configuratorName;
-            }
-        );
+        let configurator: Configurator | undefined = this.configurators.find((configurator: Configurator) => {
+            return configurator.name === configuratorParamsDTO.configuratorName;
+        });
         if (configurator) return configurator.generate(configuratorParamsDTO);
         throw new Error(`Configurator ${configuratorParamsDTO.configuratorName} not found for model ${this.name}`);
     }
 
     getName(): string {
         return this.name;
+    }
+
+    hashConfiguratorDTOData(configuratorParamsDTO: ConfiguratorParamsDTO): string {
+        return hash(configuratorParamsDTO.data);
     }
 
     abstract getPerformance(resultDTO: ResultDTO): number | undefined;
