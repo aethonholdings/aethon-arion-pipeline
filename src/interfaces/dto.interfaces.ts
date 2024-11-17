@@ -129,5 +129,5 @@ export interface ConfiguratorParamsDTO {
     modelName: string;
     configuratorName: string;
     data: ConfiguratorParamData;
-    hash: string;
+    hash?: string;
 }

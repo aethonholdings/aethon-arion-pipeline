@@ -12,11 +12,11 @@ import { Result } from "../presentation/result.class";
 import hash from "object-hash";
 
 export abstract class Model {
-    protected name: string;
-    protected abstract configurators: Configurator[];
+    protected _name: string;
+    protected abstract _configurators: Configurator[];
 
     constructor(name: string) {
-        this.name = name;
+        this._name = name;
     }
 
     run$(
@@ -87,15 +87,21 @@ export abstract class Model {
     }
 
     generateOrgConfigDTO(configuratorParamsDTO: ConfiguratorParamsDTO): OrgConfigDTO {
-        let configurator: Configurator | undefined = this.configurators.find((configurator: Configurator) => {
+        let configurator: Configurator | undefined = this._configurators.find((configurator: Configurator) => {
             return configurator.name === configuratorParamsDTO.configuratorName;
         });
         if (configurator) return configurator.generate(configuratorParamsDTO);
-        throw new Error(`Configurator ${configuratorParamsDTO.configuratorName} not found for model ${this.name}`);
+        throw new Error(`Configurator ${configuratorParamsDTO.configuratorName} not found for model ${this._name}`);
+    }
+
+    getConfigurator(configuratorName: string): Configurator {
+        return this._configurators.find(
+            (configurator: Configurator) => configurator.name === configuratorName
+        ) as Configurator;
     }
 
     getName(): string {
-        return this.name;
+        return this._name;
     }
 
     hashConfiguratorDTOData(configuratorParamsDTO: ConfiguratorParamsDTO): string {
