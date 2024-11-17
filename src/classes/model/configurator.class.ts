@@ -16,4 +16,6 @@ export abstract class Configurator {
     }
 
     abstract generate(configuratorParamData: ConfiguratorParamData): OrgConfigDTO;
+
+    abstract getDefaultParams(): ConfiguratorParamData;
 }

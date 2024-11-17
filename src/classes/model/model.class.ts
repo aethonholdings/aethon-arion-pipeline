@@ -87,14 +87,16 @@ export abstract class Model {
     }
 
     generateOrgConfigDTO(configuratorParamsDTO: ConfiguratorParamsDTO): OrgConfigDTO {
-        let configurator: Configurator | undefined = this._configurators.find((configurator: Configurator) => {
-            return configurator.name === configuratorParamsDTO.configuratorName;
-        });
+        let configurator: Configurator | undefined = this.getConfigurator(configuratorParamsDTO.configuratorName);
         if (configurator) return configurator.generate(configuratorParamsDTO);
         throw new Error(`Configurator ${configuratorParamsDTO.configuratorName} not found for model ${this._name}`);
     }
 
-    getConfigurator(configuratorName: string): Configurator {
+    getConfigurators(): Configurator[] {
+        return this._configurators;
+    }
+
+    getConfigurator(configuratorName: string): Configurator | undefined {
         return this._configurators.find(
             (configurator: Configurator) => configurator.name === configuratorName
         ) as Configurator;
@@ -104,8 +106,8 @@ export abstract class Model {
         return this._name;
     }
 
-    hashConfiguratorDTOData(configuratorParamsDTO: ConfiguratorParamsDTO): string {
-        return hash(configuratorParamsDTO.data);
+    hashObject(object: any): string {
+        return hash(object);
     }
 
     abstract getPerformance(resultDTO: ResultDTO): number | undefined;
