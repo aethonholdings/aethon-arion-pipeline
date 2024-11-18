@@ -1,5 +1,4 @@
 import { ConfiguratorParamsDTO, ResultDTO, SimConfigDTO } from "../../interfaces/dto.interfaces";
-import { ResultReportDTO } from "../../interfaces/report.interfaces";
 import { ConfiguratorParamData } from "../../types/pipeline.types";
 import { StateSpace } from "./state-space.class";
 
@@ -59,6 +58,4 @@ export abstract class Result<T extends ConfiguratorParamData> implements ResultD
     }
 
     abstract getPerformance(params?: any): number;
-
-    abstract getResultReport(): ResultReportDTO;
 }
