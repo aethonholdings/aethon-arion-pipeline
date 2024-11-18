@@ -1,13 +1,14 @@
 import { ConfiguratorParamsDTO, ResultDTO, SimConfigDTO } from "../../interfaces/dto.interfaces";
 import { ResultReportDTO } from "../../interfaces/report.interfaces";
+import { ConfiguratorParamData } from "../../types/pipeline.types";
 import { StateSpace } from "./state-space.class";
 
-export abstract class Result implements ResultDTO {
+export abstract class Result<T extends ConfiguratorParamData> implements ResultDTO<T> {
     id?: number;
     simConfigId?: number;
     orgConfigId?: number;
     simSetId?: number;
-    simConfig?: SimConfigDTO;
+    simConfig?: SimConfigDTO<T>;
     runCount: number;
     nodeId: string;
     start: Date;
@@ -20,13 +21,13 @@ export abstract class Result implements ResultDTO {
     reporting: number[];
     priorityIntensity?: number;
     performance?: number;
-    stateSpace?: StateSpace;
+    stateSpace?: StateSpace<T>;
     agentCount?: number;
     orgConfigType?: string;
     configuratorName?: string;
-    configuratorParams?: ConfiguratorParamsDTO;
+    configuratorParams?: ConfiguratorParamsDTO<T>;
 
-    constructor(resultDTO: ResultDTO) {
+    constructor(resultDTO: ResultDTO<T>) {
         this.id = resultDTO.id;
         this.simConfigId = resultDTO.simConfigId;
         this.orgConfigId = resultDTO.orgConfigId;
@@ -53,7 +54,7 @@ export abstract class Result implements ResultDTO {
         return JSON.parse(JSON.stringify(this));
     }
 
-    toDTO(): ResultDTO {
+    toDTO(): ResultDTO<T> {
         return this;
     }
 

@@ -1,13 +1,13 @@
 import { ConfiguratorParamData, RandomStreamType, StateType } from "../types/pipeline.types";
 
 // generic data pipeline DTOs
-export interface SimConfigDTO {
+export interface SimConfigDTO<T extends ConfiguratorParamData> {
     id?: number;
-    simConfigParamsDTO?: SimConfigParamsDTO;
-    simSet?: SimSetDTO;
+    simConfigParamsDTO?: SimConfigParamsDTO<T>;
+    simSet?: SimSetDTO<T>;
     simSetId?: number;
     orgConfigId: number;
-    orgConfig?: OrgConfigDTO;
+    orgConfig?: OrgConfigDTO<T>;
     runCount: number;
     days: number;
     randomStreamType: RandomStreamType;
@@ -17,23 +17,23 @@ export interface SimConfigDTO {
     avgPerformance?: number;
     stdDevPerformance?: number;
     entropy?: number;
-    results?: ResultDTO[];
+    results?: ResultDTO<T>[];
     debug?: string[];
     state?: StateType;
 }
 
-export interface SimConfigParamsDTO {
+export interface SimConfigParamsDTO<T extends ConfiguratorParamData> {
     id?: number;
-    convergenceTests: ConvergenceTestDTO[];
-    simConfigs: SimConfigDTO[];
+    convergenceTests: ConvergenceTestDTO<T>[];
+    simConfigs: SimConfigDTO<T>[];
     days: number;
     randomStreamType: RandomStreamType;
 }
 
-export interface SimSetDTO {
+export interface SimSetDTO<T extends ConfiguratorParamData> {
     id?: number;
     description: string;
-    simConfigs: SimConfigDTO[];
+    simConfigs: SimConfigDTO<T>[];
     type: string;
     state?: StateType;
     simConfigCount?: number;
@@ -41,7 +41,7 @@ export interface SimSetDTO {
     completedSimConfigCount?: number;
 }
 
-export interface OrgConfigDTO {
+export interface OrgConfigDTO<T extends ConfiguratorParamData> {
     id?: number;
     type: string;
     clockTickSeconds: number;
@@ -54,8 +54,8 @@ export interface OrgConfigDTO {
     influenceIntensity: number;
     judgmentIntensity: number;
     incentiveIntensity: number;
-    configuratorParams: ConfiguratorParamsDTO;
-    simConfigs?: SimConfigDTO[];
+    configuratorParams: ConfiguratorParamsDTO<T>;
+    simConfigs?: SimConfigDTO<T>[];
     configuratorName?: string;
 }
 
@@ -72,10 +72,10 @@ export interface AgentSetTensorsDTO {
     incentiveTensor: number[][][][];
 }
 
-export interface StateSpacePointDTO {
+export interface StateSpacePointDTO<T extends ConfiguratorParamData> {
     id?: number;
     resultId?: number;
-    result?: ResultDTO;
+    result?: ResultDTO<T>;
     clockTick: number;
     board: number[];
     agentStates: number[];
@@ -84,12 +84,12 @@ export interface StateSpacePointDTO {
     reporting: number[];
 }
 
-export interface ResultDTO {
+export interface ResultDTO<T extends ConfiguratorParamData> {
     id?: number;
     simConfigId?: number;
     orgConfigId?: number;
     simSetId?: number;
-    simConfig?: SimConfigDTO;
+    simConfig?: SimConfigDTO<T>;
     runCount: number;
     nodeId: string;
     start: Date;
@@ -102,17 +102,17 @@ export interface ResultDTO {
     reporting: number[];
     priorityIntensity?: number;
     performance?: number;
-    stateSpace?: StateSpacePointDTO[];
+    stateSpace?: StateSpacePointDTO<T>[];
     agentCount?: number;
     orgConfigType?: string;
     configuratorName?: string;
-    configuratorParams?: ConfiguratorParamsDTO;
+    configuratorParams?: ConfiguratorParamsDTO<T>;
 }
 
-export interface ConvergenceTestDTO {
+export interface ConvergenceTestDTO<T extends ConfiguratorParamData> {
     id?: number;
-    simConfigParams: SimConfigParamsDTO;
-    configuratorParams: ConfiguratorParamsDTO;
+    simConfigParams: SimConfigParamsDTO<T>;
+    configuratorParams: ConfiguratorParamsDTO<T>;
     orgConfigCount: number;
     simConfigCount: number;
     completedSimConfigCount: number;
@@ -124,10 +124,10 @@ export interface ConvergenceTestDTO {
     state: StateType;
 }
 
-export interface ConfiguratorParamsDTO {
+export interface ConfiguratorParamsDTO<T extends ConfiguratorParamData> {
     id?: number;
     modelName: string;
     configuratorName: string;
-    data: ConfiguratorParamData;
+    data: T;
     hash?: string;
 }

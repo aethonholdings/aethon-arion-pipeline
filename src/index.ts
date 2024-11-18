@@ -10,10 +10,12 @@ export * from "./interfaces/report.interfaces"; // report
 
 // classes
 export * from "./classes/api/api.class"
-export * from "./classes/model/configurator.class"; 
-export * from "./classes/model/model.class"; 
-export * from "./classes/presentation/result-set.class"
-export * from "./classes/presentation/result.class"
-export * from "./classes/presentation/state-space-point.class";
-export * from "./classes/presentation/state-space.class";
+export * from "./classes/pipeline/configurator.class"; 
+export * from "./classes/pipeline/model.class"; 
+export * from "./classes/pipeline/pipeline.class";
+export * from "./classes/analysis/result-set.class"
+export * from "./classes/analysis/result.class"
+export * from "./classes/analysis/state-space-point.class";
+export * from "./classes/analysis/state-space.class";
+
 

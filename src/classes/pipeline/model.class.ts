@@ -1,31 +1,28 @@
 import { Logger, Organisation, RandomStreamFactory, Simulation, SimulationConfig, StepOutput } from "aethon-arion-core";
-import { Configurator } from "./configurator.class";
 import {
-    ConfiguratorParamsDTO,
-    OrgConfigDTO,
     ResultDTO,
     SimConfigDTO,
     StateSpacePointDTO
 } from "../../interfaces/dto.interfaces";
 import { map, Observable, reduce } from "rxjs";
-import { Result } from "../presentation/result.class";
+import { Result } from "../analysis/result.class";
 import hash from "object-hash";
+import { ConfiguratorParamData } from "../../types/pipeline.types";
 
-export abstract class Model {
+export abstract class Model<T extends ConfiguratorParamData> {
     protected _name: string;
-    protected abstract _configurators: Configurator[];
 
     constructor(name: string) {
         this._name = name;
     }
 
     run$(
-        simConfigDTO: SimConfigDTO,
+        simConfigDTO: SimConfigDTO<T>,
         randomStreamFactory: RandomStreamFactory,
         logger: Logger,
         calculationNodeId: string,
         saveStateSpace: boolean = false
-    ): Observable<ResultDTO> {
+    ): Observable<ResultDTO<T>> {
         const startTime = new Date();
         const simulation = this.createSimulation(simConfigDTO, logger, randomStreamFactory);
         let organisation: Organisation;
@@ -41,13 +38,13 @@ export abstract class Model {
                     plant: runOutput.organisation.getPlant().getStateTensor(),
                     reporting: runOutput.organisation.getReporting().getReportingTensor(),
                     priorityTensor: runOutput.organisation.getAgents().getTensors().priorityTensor
-                } as StateSpacePointDTO;
+                } as StateSpacePointDTO<T>;
             }),
-            reduce((stateSpace: StateSpacePointDTO[], stateSpacePoint: StateSpacePointDTO) => {
+            reduce((stateSpace: StateSpacePointDTO<T>[], stateSpacePoint: StateSpacePointDTO<T>) => {
                 if (saveStateSpace) stateSpace.push(JSON.parse(JSON.stringify(stateSpacePoint)));
                 return stateSpace;
-            }, [] as StateSpacePointDTO[]),
-            map((results: StateSpacePointDTO[]) => {
+            }, [] as StateSpacePointDTO<T>[]),
+            map((results: StateSpacePointDTO<T>[]) => {
                 const endTime = new Date();
                 const resultDTO = {
                     simConfigId: simConfigDTO.id,
@@ -63,14 +60,14 @@ export abstract class Model {
                     reporting: organisation.getReporting().getReportingTensor(),
                     priorityTensor: organisation.getAgents().getTensors().priorityTensor,
                     stateSpace: results
-                } as ResultDTO;
+                } as ResultDTO<T>;
                 resultDTO.performance = this.getPerformance(resultDTO);
                 return resultDTO;
             })
         );
     }
 
-    createSimulation(simConfigDTO: SimConfigDTO, logger: Logger, randomStreamFactory: RandomStreamFactory): Simulation {
+    createSimulation(simConfigDTO: SimConfigDTO<T>, logger: Logger, randomStreamFactory: RandomStreamFactory): Simulation {
         const simulationConfig = {
             days: simConfigDTO.days,
             debug: [],
@@ -86,22 +83,6 @@ export abstract class Model {
         }
     }
 
-    generateOrgConfigDTO(configuratorParamsDTO: ConfiguratorParamsDTO): OrgConfigDTO {
-        let configurator: Configurator | undefined = this.getConfigurator(configuratorParamsDTO.configuratorName);
-        if (configurator) return configurator.generate(configuratorParamsDTO);
-        throw new Error(`Configurator ${configuratorParamsDTO.configuratorName} not found for model ${this._name}`);
-    }
-
-    getConfigurators(): Configurator[] {
-        return this._configurators;
-    }
-
-    getConfigurator(configuratorName: string): Configurator | undefined {
-        return this._configurators.find(
-            (configurator: Configurator) => configurator.name === configuratorName
-        ) as Configurator;
-    }
-
     getName(): string {
         return this._name;
     }
@@ -110,9 +91,7 @@ export abstract class Model {
         return hash(object);
     }
 
-    abstract getPerformance(resultDTO: ResultDTO): number | undefined;
-
-    abstract createResult(resultDTO: ResultDTO): Result;
+    abstract getPerformance(resultDTO: ResultDTO<T>): number | undefined;
 
     protected abstract createNewOrganisationInstance(
         simConfig: SimulationConfig,
