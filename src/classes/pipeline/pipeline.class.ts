@@ -1,4 +1,4 @@
-import { Presentation } from "./presentation.class";
+import { Presenter } from "./presenter.class";
 import { Configurator } from "./configurator.class";
 import { Model } from "./model.class";
 import { ConfiguratorParamData } from "../../types/pipeline.types";
@@ -6,12 +6,12 @@ import hash from "object-hash";
 
 export class Pipeline {
     protected _configurators: Configurator<ConfiguratorParamData>[] = [];
-    protected _presentations: Presentation<ConfiguratorParamData>[] = [];
+    protected _presentations: Presenter<ConfiguratorParamData>[] = [];
     protected _models: Model<ConfiguratorParamData>[] = [];
 
     constructor(
         configurators: Configurator<ConfiguratorParamData>[],
-        presentations: Presentation<ConfiguratorParamData>[],
+        presentations: Presenter<ConfiguratorParamData>[],
         models: Model<ConfiguratorParamData>[]
     ) {
         this._configurators = configurators;
@@ -29,13 +29,13 @@ export class Pipeline {
         );
     }
 
-    getPresentations(): Presentation<ConfiguratorParamData>[] {
+    getPresentations(): Presenter<ConfiguratorParamData>[] {
         return this._presentations;
     }
 
-    getPresentation(presentationName: string): Presentation<ConfiguratorParamData> | undefined {
+    getPresentation(presentationName: string): Presenter<ConfiguratorParamData> | undefined {
         return this._presentations.find(
-            (presentation: Presentation<ConfiguratorParamData>) => presentation.getName() === presentationName
+            (presentation: Presenter<ConfiguratorParamData>) => presentation.getName() === presentationName
         );
     }
 

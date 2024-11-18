@@ -3,7 +3,7 @@ import { Model } from "./model.class";
 import { StateSpacePoint } from "../analysis/state-space-point.class";
 import { ConfiguratorParamData } from "../../types/pipeline.types";
 
-export abstract class Presentation<T extends ConfiguratorParamData> {
+export abstract class Presenter<T extends ConfiguratorParamData> {
     name: string;
     protected _model: Model<T>;
 
