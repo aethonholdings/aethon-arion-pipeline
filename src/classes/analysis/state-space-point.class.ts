@@ -1,7 +1,6 @@
 import { StateSpacePointDTO } from "../../interfaces/dto.interfaces";
-import { ConfiguratorParamData } from "../../types/pipeline.types";
 
-export class StateSpacePoint<T extends ConfiguratorParamData> implements StateSpacePointDTO<T> {
+export class StateSpacePoint implements StateSpacePointDTO {
     clockTick: number;
     plant: number[];
     agentStates: number[];
@@ -9,7 +8,7 @@ export class StateSpacePoint<T extends ConfiguratorParamData> implements StateSp
     board: number[];
     reporting: number[];
 
-    constructor(stateSpacePointDTO: StateSpacePointDTO<T>) {
+    constructor(stateSpacePointDTO: StateSpacePointDTO) {
         this.clockTick = stateSpacePointDTO.clockTick;
         this.plant = stateSpacePointDTO.plant;
         this.agentStates = stateSpacePointDTO.agentStates;
@@ -22,7 +21,7 @@ export class StateSpacePoint<T extends ConfiguratorParamData> implements StateSp
         return JSON.parse(JSON.stringify(this));
     }
 
-    toDTO(): StateSpacePointDTO<T> {
-        return this as StateSpacePointDTO<T>;
+    toDTO(): StateSpacePointDTO {
+        return this as StateSpacePointDTO;
     }
 }

@@ -3,14 +3,15 @@ import { StateSpacePointDTO } from "../../interfaces/dto.interfaces";
 import { StateSpacePoint } from "./state-space-point.class";
 import { ConfiguratorParamData } from "../../types/pipeline.types";
 
-export class StateSpace<T extends ConfiguratorParamData> extends Array<StateSpacePoint<T>> {
+export class StateSpace<T extends ConfiguratorParamData> extends Array<StateSpacePoint> {
     private _agentCount: number = 0;
 
-    constructor(stateSpace: StateSpacePoint<T>[] | StateSpacePointDTO<T>[] | undefined) {
-        const tmp: StateSpacePoint<T>[] = [];
-        if(stateSpace) stateSpace.forEach((stateSpacePoint) => {
-            tmp.push(new StateSpacePoint(stateSpacePoint));
-        });
+    constructor(stateSpace: StateSpacePoint[] | StateSpacePointDTO[] | undefined) {
+        const tmp: StateSpacePoint[] = [];
+        if (stateSpace)
+            stateSpace.forEach((stateSpacePoint) => {
+                tmp.push(new StateSpacePoint(stateSpacePoint));
+            });
         super(...tmp);
         if (this.length > 0) this._agentCount = this[0].agentStates.length;
     }
@@ -83,7 +84,7 @@ export class StateSpace<T extends ConfiguratorParamData> extends Array<StateSpac
         return JSON.parse(JSON.stringify(this));
     }
 
-    toDTO(): StateSpacePointDTO<T>[] {
-        return this as StateSpacePointDTO<T>[];
+    toDTO(): StateSpacePointDTO[] {
+        return this as StateSpacePointDTO[];
     }
 }

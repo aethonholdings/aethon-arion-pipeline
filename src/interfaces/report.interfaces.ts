@@ -1,28 +1,51 @@
-// report DTOs
-export interface VariableDTO {
+// plan vs actuals report
+export interface PlanVsActualsReportDTO {
     name: string;
-    reporting: number;
-    plan: number;
+    lineItems: PlanVsActualsReportLineItemDTO[];
 }
 
-export interface ReportLineItemDTO {
-    class: string;
-    operator: string;
+export interface PlanVsActualsReportRowDTO extends PlanVsActualsReportLineItemDTO {
     values: VariableDTO;
 }
 
-export interface ReportDTO {
-    name: string;
-    lineItems: ReportLineItemDTO[];
+export interface PlanVsActualsReportLineItemDTO {
+    name: VariableName;
+    class: string;
+    operator: Operator;
 }
 
+export interface VariableDTO {
+    actual: number;
+    plan: number;
+}
+
+export type Operator = string | null;
+export type VariableName = string;
+
+// TBD
 export interface ResultReportDTO {
-    variables: Map<string, VariableDTO>;
-    reports: ReportDTO[];
-    reportingVariableArray: string[];
-    plantStateVariableArray: string[];
     targetPriorityTensor: number[][][];
     deltaTensor: number[][][];
 }
 
-
+// Report generic
+export interface ModelIndexDTO {
+    reporting?: {
+        variableNames: string[];
+        arrayIndex: { [key: string]: number };
+    };
+    plant?: {
+        variableNames: string[];
+        arrayIndex: { [key: string]: number };
+    };
+    agentSet?: {
+        states: {
+            variableNames: string[];
+            arrayIndex: { [key: string]: number };
+        };
+    };
+    board?: {
+        variableNames: string[];
+        arrayIndex: { [key: string]: number };
+    };
+}

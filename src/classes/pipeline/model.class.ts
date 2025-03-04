@@ -1,28 +1,25 @@
 import { Logger, Organisation, RandomStreamFactory, Simulation, SimulationConfig, StepOutput } from "aethon-arion-core";
-import {
-    ResultDTO,
-    SimConfigDTO,
-    StateSpacePointDTO
-} from "../../interfaces/dto.interfaces";
+import { ResultDTO, SimConfigDTO, StateSpacePointDTO } from "../../interfaces/dto.interfaces";
 import { map, Observable, reduce } from "rxjs";
-import { Result } from "../analysis/result.class";
+import { Configurator } from "./configurator.class";
 import hash from "object-hash";
-import { ConfiguratorParamData } from "../../types/pipeline.types";
 
-export abstract class Model<T extends ConfiguratorParamData> {
+export abstract class Model {
     protected _name: string;
+    protected _configurators: Configurator[] = [];
 
     constructor(name: string) {
         this._name = name;
+        this.initialiseConfigurators();
     }
 
     run$(
-        simConfigDTO: SimConfigDTO<T>,
+        simConfigDTO: SimConfigDTO,
         randomStreamFactory: RandomStreamFactory,
         logger: Logger,
         calculationNodeId: string,
         saveStateSpace: boolean = false
-    ): Observable<ResultDTO<T>> {
+    ): Observable<ResultDTO> {
         const startTime = new Date();
         const simulation = this.createSimulation(simConfigDTO, logger, randomStreamFactory);
         let organisation: Organisation;
@@ -38,13 +35,13 @@ export abstract class Model<T extends ConfiguratorParamData> {
                     plant: runOutput.organisation.getPlant().getStateTensor(),
                     reporting: runOutput.organisation.getReporting().getReportingTensor(),
                     priorityTensor: runOutput.organisation.getAgents().getTensors().priorityTensor
-                } as StateSpacePointDTO<T>;
+                } as StateSpacePointDTO;
             }),
-            reduce((stateSpace: StateSpacePointDTO<T>[], stateSpacePoint: StateSpacePointDTO<T>) => {
+            reduce((stateSpace: StateSpacePointDTO[], stateSpacePoint: StateSpacePointDTO) => {
                 if (saveStateSpace) stateSpace.push(JSON.parse(JSON.stringify(stateSpacePoint)));
                 return stateSpace;
-            }, [] as StateSpacePointDTO<T>[]),
-            map((results: StateSpacePointDTO<T>[]) => {
+            }, [] as StateSpacePointDTO[]),
+            map((results: StateSpacePointDTO[]) => {
                 const endTime = new Date();
                 const resultDTO = {
                     simConfigId: simConfigDTO.id,
@@ -60,14 +57,14 @@ export abstract class Model<T extends ConfiguratorParamData> {
                     reporting: organisation.getReporting().getReportingTensor(),
                     priorityTensor: organisation.getAgents().getTensors().priorityTensor,
                     stateSpace: results
-                } as ResultDTO<T>;
+                } as ResultDTO;
                 resultDTO.performance = this.getPerformance(resultDTO);
                 return resultDTO;
             })
         );
     }
 
-    createSimulation(simConfigDTO: SimConfigDTO<T>, logger: Logger, randomStreamFactory: RandomStreamFactory): Simulation {
+    createSimulation(simConfigDTO: SimConfigDTO, logger: Logger, randomStreamFactory: RandomStreamFactory): Simulation {
         const simulationConfig = {
             days: simConfigDTO.days,
             debug: [],
@@ -87,11 +84,17 @@ export abstract class Model<T extends ConfiguratorParamData> {
         return this._name;
     }
 
+    getConfigurators(): Configurator[] {
+        return this._configurators;
+    }
+
     hashObject(object: any): string {
         return hash(object);
     }
 
-    abstract getPerformance(resultDTO: ResultDTO<T>): number | undefined;
+    abstract getPerformance(resultDTO: ResultDTO): number | undefined;
+
+    protected abstract initialiseConfigurators(): void;
 
     protected abstract createNewOrganisationInstance(
         simConfig: SimulationConfig,

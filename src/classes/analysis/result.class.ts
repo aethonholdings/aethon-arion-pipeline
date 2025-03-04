@@ -2,12 +2,12 @@ import { ConfiguratorParamsDTO, ResultDTO, SimConfigDTO } from "../../interfaces
 import { ConfiguratorParamData } from "../../types/pipeline.types";
 import { StateSpace } from "./state-space.class";
 
-export abstract class Result<T extends ConfiguratorParamData> implements ResultDTO<T> {
+export abstract class Result<T extends ConfiguratorParamData> implements ResultDTO {
     id?: number;
     simConfigId?: number;
     orgConfigId?: number;
     simSetId?: number;
-    simConfig?: SimConfigDTO<T>;
+    simConfig?: SimConfigDTO;
     runCount: number;
     nodeId: string;
     start: Date;
@@ -26,7 +26,7 @@ export abstract class Result<T extends ConfiguratorParamData> implements ResultD
     configuratorName?: string;
     configuratorParams?: ConfiguratorParamsDTO<T>;
 
-    constructor(resultDTO: ResultDTO<T>) {
+    constructor(resultDTO: ResultDTO) {
         this.id = resultDTO.id;
         this.simConfigId = resultDTO.simConfigId;
         this.orgConfigId = resultDTO.orgConfigId;
@@ -53,7 +53,7 @@ export abstract class Result<T extends ConfiguratorParamData> implements ResultD
         return JSON.parse(JSON.stringify(this));
     }
 
-    toDTO(): ResultDTO<T> {
+    toDTO(): ResultDTO {
         return this;
     }
 

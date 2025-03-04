@@ -3,14 +3,14 @@ import { ConfiguratorParamData } from "../../types/pipeline.types";
 import { Result } from "./result.class";
 
 export class ResultSet<T extends ConfiguratorParamData> {
-    protected results: ResultDTO<T>[];
+    protected results: ResultDTO[];
     protected histogramBinCount: number;
     private histogram: Map<string, number> | null;
     private histogramMin: number[];
     private histogramMax: number[];
     private histogramBinSizes: number[];
 
-    constructor(results: Result<T>[] | ResultDTO<T>[], histogramBinCount: number = 100) {
+    constructor(results: Result<T>[] | ResultDTO[], histogramBinCount: number = 100) {
         this.results = results;
         this.histogramBinCount = histogramBinCount;
         this.histogramMax = [];
@@ -65,7 +65,7 @@ export class ResultSet<T extends ConfiguratorParamData> {
         return this;
     }
 
-    getResults(): ResultDTO<T>[] {
+    getResults(): ResultDTO[] {
         return this.results;
     }
 

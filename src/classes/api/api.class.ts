@@ -24,7 +24,7 @@ export class Api {
     request$(operationId: string, options: APIRequestOptions): Observable<any> {
         const request: APIRequest | undefined = this._api.getRequest(operationId, options);
         let json$: Observable<any> = new Observable<any>();
-        if(request) {
+        if (request) {
             switch (request.endpoint.method) {
                 case HttpMethod.GET:
                     json$ = this._get$(request);
@@ -40,7 +40,7 @@ export class Api {
                     break;
             }
         }
-        
+
         return json$.pipe(
             catchError((error, caught) => {
                 this._handleError(error);
