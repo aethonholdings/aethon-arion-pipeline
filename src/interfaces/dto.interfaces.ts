@@ -33,8 +33,8 @@ export interface SimConfigParamsDTO {
 export interface SimSetDTO {
     id?: number;
     description: string;
-    simConfigs: SimConfigDTO[];
     type: string;
+    simConfigs?: SimConfigDTO[];
     state?: StateType;
     simConfigCount?: number;
     completedRunCount?: number;

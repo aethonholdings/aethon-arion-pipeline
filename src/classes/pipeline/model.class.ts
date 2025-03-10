@@ -1,8 +1,14 @@
 import { Logger, Organisation, RandomStreamFactory, Simulation, SimulationConfig, StepOutput } from "aethon-arion-core";
-import { ResultDTO, SimConfigDTO, StateSpacePointDTO } from "../../interfaces/dto.interfaces";
+import {
+    ResultDTO,
+    SimConfigDTO,
+    StateSpacePointDTO,
+    ConfiguratorParamsDTO,
+    OrgConfigDTO
+} from "../../interfaces/dto.interfaces";
+import { ConfiguratorParamData } from "../../types/pipeline.types";
 import { map, Observable, reduce } from "rxjs";
 import { Configurator } from "./configurator.class";
-import hash from "object-hash";
 
 export abstract class Model {
     protected _name: string;
@@ -10,9 +16,15 @@ export abstract class Model {
 
     constructor(name: string) {
         this._name = name;
-        this.initialiseConfigurators();
     }
 
+    // return the model configurators
+    getConfigurators(): Configurator[] {
+        return this._configurators;
+    }
+
+    // Create and run a simulation with the given sim and org configurations,
+    // and return the results over a pipe
     run$(
         simConfigDTO: SimConfigDTO,
         randomStreamFactory: RandomStreamFactory,
@@ -64,6 +76,7 @@ export abstract class Model {
         );
     }
 
+    // Create a simulation instance based on the sim and org configurations
     createSimulation(simConfigDTO: SimConfigDTO, logger: Logger, randomStreamFactory: RandomStreamFactory): Simulation {
         const simulationConfig = {
             days: simConfigDTO.days,
@@ -73,30 +86,38 @@ export abstract class Model {
         } as SimulationConfig;
         if (simConfigDTO.orgConfig) {
             const simConfig = simConfigDTO as SimulationConfig;
-            const organisation = this.createNewOrganisationInstance(simConfig, randomStreamFactory, logger);
+            const organisation = this._instantiateModelOrgConfig(simConfig, randomStreamFactory, logger);
             return new Simulation(simulationConfig, logger, randomStreamFactory, organisation);
         } else {
             throw new Error(`No orgConfig found for simConfigDTO ${simConfigDTO.id}`);
         }
     }
 
+    // Create an organisation instance DTO based on the model type and configurator
+    createOrganisation(configuratorParamsDTO: ConfiguratorParamsDTO<ConfiguratorParamData>): OrgConfigDTO {
+        if (configuratorParamsDTO.modelName !== this._name) {
+            throw new Error("Invalid model");
+        }
+        const configurator = this._configurators.find(
+            (configurator) => configurator.name === configuratorParamsDTO.configuratorName
+        );
+        if (!configurator) {
+            throw new Error("Invalid model configurator name");
+        }
+        return configurator.generate(configuratorParamsDTO);
+    }
+
+    // Return the name of the model, which functions as its identifier
     getName(): string {
         return this._name;
     }
 
-    getConfigurators(): Configurator[] {
-        return this._configurators;
-    }
-
-    hashObject(object: any): string {
-        return hash(object);
-    }
-
+    // Calculate the model's performance metric for a given result
     abstract getPerformance(resultDTO: ResultDTO): number | undefined;
 
-    protected abstract initialiseConfigurators(): void;
-
-    protected abstract createNewOrganisationInstance(
+    // Instantiate the model's organisation configuration based on the simulation configuration
+    // abstract method to be implemented for each specific model type with the relevant classes
+    protected abstract _instantiateModelOrgConfig(
         simConfig: SimulationConfig,
         randomStreamFactory: RandomStreamFactory,
         logger: Logger
