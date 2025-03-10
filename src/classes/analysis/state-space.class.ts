@@ -1,9 +1,8 @@
 import { Utils } from "aethon-arion-core";
 import { StateSpacePointDTO } from "../../interfaces/dto.interfaces";
 import { StateSpacePoint } from "./state-space-point.class";
-import { ConfiguratorParamData } from "../../types/pipeline.types";
 
-export class StateSpace<T extends ConfiguratorParamData> extends Array<StateSpacePoint> {
+export class StateSpace extends Array<StateSpacePoint> {
     private _agentCount: number = 0;
 
     constructor(stateSpace: StateSpacePoint[] | StateSpacePointDTO[] | undefined) {

@@ -16,7 +16,7 @@ export class ObjectHash extends String {
         // then convert the object to an array and sort to ensure that the order of the keys does not affect the hash
         tmp = flatten(tmp);
         const array: string[] = [];
-        for (let key in tmp) {
+        for (const key in tmp) {
             array.push(`${key}:${tmp[key]}`);
         }
         super(hash(array.sort((a, b) => a.localeCompare(b))));
