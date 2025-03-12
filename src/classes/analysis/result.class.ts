@@ -20,7 +20,7 @@ export abstract class Result<T extends ConfiguratorParamData> implements ResultD
     reporting: number[];
     priorityIntensity?: number;
     performance?: number;
-    stateSpace?: StateSpace<T>;
+    stateSpace?: StateSpace;
     agentCount?: number;
     orgConfigType?: string;
     configuratorName?: string;
