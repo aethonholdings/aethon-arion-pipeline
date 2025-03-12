@@ -1,8 +1,6 @@
 import { ResultDTO } from "../../interfaces/dto.interfaces";
-import { ConfiguratorParamData } from "../../types/pipeline.types";
-import { Result } from "./result.class";
 
-export class ResultSet<T extends ConfiguratorParamData> {
+export class ResultSet {
     protected results: ResultDTO[];
     protected histogramBinCount: number;
     private histogram: Map<string, number> | null;
@@ -10,7 +8,7 @@ export class ResultSet<T extends ConfiguratorParamData> {
     private histogramMax: number[];
     private histogramBinSizes: number[];
 
-    constructor(results: Result<T>[] | ResultDTO[], histogramBinCount: number = 100) {
+    constructor(results: ResultDTO[], histogramBinCount: number = 100) {
         this.results = results;
         this.histogramBinCount = histogramBinCount;
         this.histogramMax = [];

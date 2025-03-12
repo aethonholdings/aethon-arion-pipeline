@@ -1,5 +1,27 @@
 import { ConfiguratorParamData, RandomStreamType, StateType } from "../types/pipeline.types";
 
+// Index of all model variables
+export interface ModelIndexDTO  {
+    reporting?: {
+        variableNames: string[];
+        arrayIndex: { [key: string]: number };
+    };
+    plant?: {
+        variableNames: string[];
+        arrayIndex: { [key: string]: number };
+    };
+    agentSet?: {
+        states: {
+            variableNames: string[];
+            arrayIndex: { [key: string]: number };
+        };
+    };
+    board?: {
+        variableNames: string[];
+        arrayIndex: { [key: string]: number };
+    };
+}
+
 // generic data pipeline DTOs
 export interface SimConfigDTO {
     id?: number;

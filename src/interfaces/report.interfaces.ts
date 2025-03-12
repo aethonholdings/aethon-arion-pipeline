@@ -1,6 +1,5 @@
 // plan vs actuals report
 export interface PlanVsActualsReportDTO {
-    name: string;
     lineItems: PlanVsActualsReportLineItemDTO[];
 }
 
@@ -28,24 +27,3 @@ export interface ResultReportDTO {
     deltaTensor: number[][][];
 }
 
-// Report generic
-export interface ModelIndexDTO  {
-    reporting?: {
-        variableNames: string[];
-        arrayIndex: { [key: string]: number };
-    };
-    plant?: {
-        variableNames: string[];
-        arrayIndex: { [key: string]: number };
-    };
-    agentSet?: {
-        states: {
-            variableNames: string[];
-            arrayIndex: { [key: string]: number };
-        };
-    };
-    board?: {
-        variableNames: string[];
-        arrayIndex: { [key: string]: number };
-    };
-}

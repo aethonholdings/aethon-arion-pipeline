@@ -4,17 +4,18 @@ import {
     SimConfigDTO,
     StateSpacePointDTO,
     ConfiguratorParamsDTO,
-    OrgConfigDTO
+    OrgConfigDTO,
+    ModelIndexDTO
 } from "../../interfaces/dto.interfaces";
 import { ConfiguratorParamData } from "../../types/pipeline.types";
 import { map, Observable, reduce } from "rxjs";
 import { Configurator } from "./configurator.class";
-import { ModelIndexDTO } from "../../interfaces/report.interfaces";
 
 export abstract class Model {
     protected _name: string;
     protected _index: ModelIndexDTO;
     protected _configurators: Configurator[] = [];
+    protected _reports: Report[] = [];
 
     constructor(name: string, index: ModelIndexDTO) {
         this._name = name;

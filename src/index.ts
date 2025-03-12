@@ -14,7 +14,5 @@ export * from "./classes/pipeline/configurator.class";
 export * from "./classes/pipeline/model.class";
 export * from "./classes/pipeline/object-hash.class";
 export * from "./classes/analysis/result-set.class";
-export * from "./classes/analysis/result.class";
-export * from "./classes/analysis/state-space-point.class";
 export * from "./classes/analysis/state-space.class";
-export * from "./classes/analysis/report.class";
+export * from "./classes/pipeline/report.class";
