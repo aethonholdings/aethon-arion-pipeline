@@ -10,12 +10,13 @@ import {
 import { ConfiguratorParamData } from "../../types/pipeline.types";
 import { map, Observable, reduce } from "rxjs";
 import { Configurator } from "./configurator.class";
+import { KPIFactory } from "./kpi-factory.class";
 
 export abstract class Model {
     protected _name: string;
     protected _index: ModelIndexDTO;
     protected _configurators: Configurator[] = [];
-    protected _reports: Report[] = [];
+    protected _kpiFactories: KPIFactory[] = [];
 
     constructor(name: string, index: ModelIndexDTO) {
         this._name = name;
@@ -106,21 +107,30 @@ export abstract class Model {
         return configurator.generate(configuratorParamsDTO);
     }
 
+    // access a specific KPI factory
+    getKPIFactory(name: string): KPIFactory | undefined {
+        return this._kpiFactories.find((kpiFactory) => kpiFactory.name === name);
+    }
+
     // Calculate the model's performance metric for a given result
     abstract getPerformance(resultDTO: ResultDTO): number | undefined;
 
     // return the model's index, enumerating the report field names and structure
-    getIndex(): ModelIndexDTO {
+    get index(): ModelIndexDTO {
         return this._index;
     };
 
     // return the model configurators
-    getConfigurators(): Configurator[] {
+    get configurators(): Configurator[] {
         return this._configurators;
     }
 
+    get kpiFactories(): KPIFactory[] {
+        return this._kpiFactories;
+    }
+
     // Return the name of the model, which functions as its identifier
-    getName(): string {
+    get name(): string {
         return this._name;
     }
 

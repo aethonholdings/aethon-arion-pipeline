@@ -1,7 +1,7 @@
 import { ConfiguratorParamData, RandomStreamType, StateType } from "../types/pipeline.types";
 
 // Index of all model variables
-export interface ModelIndexDTO  {
+export interface ModelIndexDTO {
     reporting?: {
         variableNames: string[];
         arrayIndex: { [key: string]: number };
@@ -153,3 +153,14 @@ export interface ConfiguratorParamsDTO<T extends ConfiguratorParamData> {
     data: T;
     hash?: string;
 }
+
+// KPI DTOs
+export interface KPIDTO<KPIs> {
+    id?: number;
+    name?: string;
+    modelName?: string;
+    timestamp?: Date;
+    data: KPIs;
+}
+
+export type KPIs = any;

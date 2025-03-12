@@ -6,7 +6,6 @@ export * from "./types/pipeline.types"; // types
 
 // interfaces
 export * from "./interfaces/dto.interfaces"; // core
-export * from "./interfaces/report.interfaces"; // report
 
 // classes
 export * from "./classes/api/api.class";
@@ -15,4 +14,5 @@ export * from "./classes/pipeline/model.class";
 export * from "./classes/pipeline/object-hash.class";
 export * from "./classes/analysis/result-set.class";
 export * from "./classes/analysis/state-space.class";
-export * from "./classes/pipeline/report.class";
+export * from "./classes/pipeline/kpi-factory.class";
+export * from "./classes/analysis/plan-vs-actuals.kpi-factory.class";
