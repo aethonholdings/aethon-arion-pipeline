@@ -9,18 +9,16 @@ import {
 import { ConfiguratorParamData } from "../../types/pipeline.types";
 import { map, Observable, reduce } from "rxjs";
 import { Configurator } from "./configurator.class";
+import { ModelIndexDTO } from "../../interfaces/report.interfaces";
 
 export abstract class Model {
     protected _name: string;
+    protected _index: ModelIndexDTO;
     protected _configurators: Configurator[] = [];
 
-    constructor(name: string) {
+    constructor(name: string, index: ModelIndexDTO) {
         this._name = name;
-    }
-
-    // return the model configurators
-    getConfigurators(): Configurator[] {
-        return this._configurators;
+        this._index = index;
     }
 
     // Create and run a simulation with the given sim and org configurations,
@@ -107,13 +105,23 @@ export abstract class Model {
         return configurator.generate(configuratorParamsDTO);
     }
 
+    // Calculate the model's performance metric for a given result
+    abstract getPerformance(resultDTO: ResultDTO): number | undefined;
+
+    // return the model's index, enumerating the report field names and structure
+    getIndex(): ModelIndexDTO {
+        return this._index;
+    };
+
+    // return the model configurators
+    getConfigurators(): Configurator[] {
+        return this._configurators;
+    }
+
     // Return the name of the model, which functions as its identifier
     getName(): string {
         return this._name;
     }
-
-    // Calculate the model's performance metric for a given result
-    abstract getPerformance(resultDTO: ResultDTO): number | undefined;
 
     // Instantiate the model's organisation configuration based on the simulation configuration
     // abstract method to be implemented for each specific model type with the relevant classes

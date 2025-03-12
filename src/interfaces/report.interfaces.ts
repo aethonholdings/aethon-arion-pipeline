@@ -29,7 +29,7 @@ export interface ResultReportDTO {
 }
 
 // Report generic
-export interface ModelIndexDTO {
+export interface ModelIndexDTO  {
     reporting?: {
         variableNames: string[];
         arrayIndex: { [key: string]: number };
