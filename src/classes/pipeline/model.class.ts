@@ -108,8 +108,12 @@ export abstract class Model {
     }
 
     // access a specific KPI factory
-    getKPIFactory(name: string): KPIFactory | undefined {
-        return this._kpiFactories.find((kpiFactory) => kpiFactory.name === name);
+    getKPIFactory(name: string): KPIFactory {
+        const kpiFactory = this._kpiFactories.find((kpiFactory) => kpiFactory.name === name);
+        if (!kpiFactory) {
+            throw new Error(`KPI factory ${name} not found`);
+        }
+        return kpiFactory;
     }
 
     // Calculate the model's performance metric for a given result
