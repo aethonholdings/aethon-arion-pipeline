@@ -37,9 +37,7 @@ export interface OptimiserStateDTO<T extends ConfiguratorParamData> {
     percentComplete: number;
     state: StateType;
     configurator: ConfiguratorParamsDTO<T>,
-    step: {
-        optimiserData: OptimiserData[],
-    },
+    optimiserData: OptimiserData[]
 }
 
 // optimiser data structure specific to gradient ascent optimiser
