@@ -23,8 +23,8 @@ export interface ModelIndexDTO {
     };
 }
 
-// -- GRADIENT ASCENT ----------------------------------
-// model state encapsulating gradient ascent status
+// -- OPTIMISER ----------------------------------
+// model state encapsulating optimser state
 export interface OptimiserStateDTO<T extends ConfiguratorParamData> {
     id?: number;
     simSet: SimSetDTO,
@@ -40,18 +40,6 @@ export interface OptimiserStateDTO<T extends ConfiguratorParamData> {
     step: {
         optimiserData: OptimiserData[],
     },
-}
-
-export interface GradientAscentDTO extends OptimiserData {
-    xName: string;
-    xValue: any;
-    x: number;
-    xDelta: number;
-    performance: number;
-    performanceDelta: number;
-    slope: number;
-    configuratorId: number;
-    state: StateType;
 }
 
 // -- CORE MODEL OBJECT DTOs -------------------------------
