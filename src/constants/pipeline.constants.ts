@@ -1,1 +1,0 @@
-export const GradientAscentOptimiserName = "Gradient Ascent Optimiser";

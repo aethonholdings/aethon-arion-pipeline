@@ -16,4 +16,3 @@ export * from "./classes/analysis/state-space.class";
 export * from "./classes/pipeline/kpi-factory.class";
 export * from "./classes/analysis/plan-vs-actuals.kpi-factory.class";
 export * from "./classes/pipeline/optimiser.class";
-export * from "./classes/optimisers/gradient-ascent.optimiser.class";
