@@ -42,6 +42,19 @@ export interface OptimiserStateDTO<T extends ConfiguratorParamData> {
     },
 }
 
+// optimiser data structure specific to gradient ascent optimiser
+export interface GradientAscentDTO extends OptimiserData {
+    xName: string;
+    xValue: any;
+    x: number;
+    xDelta: number;
+    performance: number;
+    performanceDelta: number;
+    slope: number;
+    configuratorId: number;
+    state: StateType;
+}
+
 // -- CORE MODEL OBJECT DTOs -------------------------------
 
 export interface SimConfigDTO {
