@@ -122,7 +122,7 @@ export abstract class Model {
     // return the model's index, enumerating the report field names and structure
     get index(): ModelIndexDTO {
         return this._index;
-    };
+    }
 
     // return the model configurators
     get configurators(): Configurator[] {

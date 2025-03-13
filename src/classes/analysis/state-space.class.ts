@@ -5,8 +5,8 @@ export class StateSpace extends Array<StateSpacePointDTO> {
     private _agentCount: number = 0;
 
     constructor(stateSpace: StateSpacePointDTO[] | undefined) {
-        if(!stateSpace) stateSpace = [];
-        super(...stateSpace)
+        if (!stateSpace) stateSpace = [];
+        super(...stateSpace);
         if (this.length > 0) this._agentCount = this[0].agentStates.length;
     }
 
