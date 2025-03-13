@@ -7,20 +7,25 @@ import {
     OrgConfigDTO,
     ModelIndexDTO
 } from "../../interfaces/dto.interfaces";
-import { ConfiguratorParamData } from "../../types/pipeline.types";
+import { ConfiguratorParamData, OptimiserData } from "../../types/pipeline.types";
 import { map, Observable, reduce } from "rxjs";
 import { Configurator } from "./configurator.class";
 import { KPIFactory } from "./kpi-factory.class";
+import { Optimiser } from "./optimiser.class";
 
-export abstract class Model {
+export abstract class Model<T extends ConfiguratorParamData, U extends OptimiserData> {
     protected _name: string;
     protected _index: ModelIndexDTO;
-    protected _configurators: Configurator[] = [];
-    protected _kpiFactories: KPIFactory[] = [];
+    protected _configurators: Configurator<T, U>[];
+    protected _kpiFactories: KPIFactory<T, U>[];
+    protected _optimiser: Optimiser<T, U>;
 
-    constructor(name: string, index: ModelIndexDTO) {
+    constructor(name: string, index: ModelIndexDTO, optimiser: Optimiser<T, U>) {
         this._name = name;
         this._index = index;
+        this._configurators = [];
+        this._kpiFactories = [];
+        this._optimiser = optimiser;
     }
 
     // Create and run a simulation with the given sim and org configurations,
@@ -108,7 +113,7 @@ export abstract class Model {
     }
 
     // access a specific KPI factory
-    getKPIFactory(name: string): KPIFactory {
+    getKPIFactory(name: string): KPIFactory<T, U> {
         const kpiFactory = this._kpiFactories.find((kpiFactory) => kpiFactory.name === name);
         if (!kpiFactory) {
             throw new Error(`KPI factory ${name} not found`);
@@ -125,17 +130,22 @@ export abstract class Model {
     }
 
     // return the model configurators
-    get configurators(): Configurator[] {
+    get configurators(): Configurator<T, U>[] {
         return this._configurators;
     }
 
-    get kpiFactories(): KPIFactory[] {
+    get kpiFactories(): KPIFactory<T, U>[] {
         return this._kpiFactories;
     }
 
     // Return the name of the model, which functions as its identifier
     get name(): string {
         return this._name;
+    }
+
+    // Return the optimiser for gradient ascent and descent manipulation
+    get optimiser(): Optimiser<T, U> {
+        return this._optimiser;
     }
 
     // Instantiate the model's organisation configuration based on the simulation configuration

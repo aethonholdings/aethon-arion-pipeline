@@ -1,5 +1,6 @@
-import { ConfiguratorParamData, RandomStreamType, StateType } from "../types/pipeline.types";
+import { ConfiguratorParamData, OptimiserData, RandomStreamType, StateType } from "../types/pipeline.types";
 
+// -- MODEL ----------------------------------
 // Index of all model variables
 export interface ModelIndexDTO {
     reporting?: {
@@ -22,7 +23,39 @@ export interface ModelIndexDTO {
     };
 }
 
-// generic data pipeline DTOs
+// -- GRADIENT ASCENT ----------------------------------
+// model state encapsulating gradient ascent status
+export interface OptimiserStateDTO<T extends ConfiguratorParamData> {
+    id?: number;
+    simSet: SimSetDTO,
+    stepCount: number;
+    start: Date;
+    end: Date;
+    modelName: string;
+    optimiserName: string;
+    durationSec: number;
+    percentComplete: number;
+    state: StateType;
+    configurator: ConfiguratorParamsDTO<T>,
+    step: {
+        optimiserData: OptimiserData[],
+    },
+}
+
+export interface GradientAscentDTO extends OptimiserData {
+    xName: string;
+    xValue: any;
+    x: number;
+    xDelta: number;
+    performance: number;
+    performanceDelta: number;
+    slope: number;
+    configuratorId: number;
+    state: StateType;
+}
+
+// -- CORE MODEL OBJECT DTOs -------------------------------
+
 export interface SimConfigDTO {
     id?: number;
     simConfigParamsDTO?: SimConfigParamsDTO;
@@ -154,7 +187,7 @@ export interface ConfiguratorParamsDTO<T extends ConfiguratorParamData> {
     hash?: string;
 }
 
-// KPI DTOs
+// -- KPIs ----------------------------------
 export interface KPIDTO<KPIs> {
     id?: number;
     name?: string;
