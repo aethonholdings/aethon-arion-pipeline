@@ -18,9 +18,9 @@ export abstract class Model<T extends ConfiguratorParamData, U extends Optimiser
     protected _index: ModelIndexDTO;
     protected _configurators: Configurator<T, U>[];
     protected _kpiFactories: KPIFactory<T, U>[];
-    protected _optimiser: Optimiser<T, U>;
+    protected _optimiser: Optimiser<any, U>;
 
-    constructor(name: string, index: ModelIndexDTO, optimiser: Optimiser<T, U>) {
+    constructor(name: string, index: ModelIndexDTO, optimiser: Optimiser<any, U>) {
         this._name = name;
         this._index = index;
         this._configurators = [];

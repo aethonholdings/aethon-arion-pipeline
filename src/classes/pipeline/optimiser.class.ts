@@ -1,6 +1,6 @@
-import { ConfiguratorParamData, OptimiserData } from "../../types/pipeline.types";
+import { OptimiserData } from "../../types/pipeline.types";
 
-export abstract class Optimiser<T extends ConfiguratorParamData, U extends OptimiserData> {
+export abstract class Optimiser<T, U extends OptimiserData> {
     protected _name: string;
 
     constructor(name: string) {
@@ -11,6 +11,6 @@ export abstract class Optimiser<T extends ConfiguratorParamData, U extends Optim
         return this._name;
     }
 
-    abstract next(configuratorParamData: T): U;
+    abstract next(optimisationInput: T): U;
     abstract testConvergence(optimiserData: U[]): boolean;
 }
