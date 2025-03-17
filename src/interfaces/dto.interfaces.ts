@@ -24,8 +24,8 @@ export interface ModelIndexDTO {
 }
 
 // -- OPTIMISER ----------------------------------
-// model state encapsulating optimser state
-export interface OptimiserStateDTO<T extends ConfiguratorParamData> {
+// model state encapsulating optimiser state
+export interface OptimiserStateDTO<T extends ConfiguratorParamData, U extends OptimiserData> {
     id?: number;
     simSet: SimSetDTO,
     stepCount: number;
@@ -35,26 +35,35 @@ export interface OptimiserStateDTO<T extends ConfiguratorParamData> {
     optimiserName: string;
     durationSec: number;
     percentComplete: number;
-    state: StateType;
+    status: StateType;
     configurator: ConfiguratorParamsDTO<T>,
-    optimiserData: OptimiserData[]
+    optimiserData: U
 }
 
 // optimiser data structure specific to gradient ascent optimiser
-export interface GradientAscentDTO extends OptimiserData {
-    xName: string;
-    xValue: any;
+// ----------------------------------
+// configuratorParameterValueName: a string ID of the configurator param used as an input to the simulations
+// configuratorParameterValue: the configurator param used as an input to the simulations
+// x: the mapped value of the param
+// xDelta: the change in the param value for this iteration of the optimisation
+// performance: the output of the simulation
+// performanceDelta: the change in the output for this iteration of the optimisation
+// slope: the gradient of the performance
+// configuratorId: the id of the configurator used as the current point of the optimisation
+export interface GradientAscentPartialDerivativeDTO {
+    configuratorParameterValueName: any;
+    configuratorParameterValue: any;
     x: number;
     xDelta: number;
-    performance: number;
-    performanceDelta: number;
-    slope: number;
-    configuratorId: number;
-    state: StateType;
+    performance: number | undefined;
+    performanceDelta: number | undefined;
+    slope: number | undefined;
+    status: StateType;
 }
 
-// -- CORE MODEL OBJECT DTOs -------------------------------
+export type GradientAscentOptimiserData = GradientAscentPartialDerivativeDTO[];
 
+// -- CORE MODEL OBJECT DTOs -------------------------------
 export interface SimConfigDTO {
     id?: number;
     simConfigParamsDTO?: SimConfigParamsDTO;
