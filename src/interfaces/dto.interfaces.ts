@@ -1,4 +1,4 @@
-import { ConfiguratorParamData, OptimiserData, RandomStreamType, StateType } from "../types/pipeline.types";
+import { ConfiguratorParamData, ModelParams, OptimiserData, RandomStreamType, StateType } from "../types/pipeline.types";
 
 // -- MODEL ----------------------------------
 // Index of all model variables
@@ -68,8 +68,6 @@ export type Gradient<T extends ConfiguratorParamData> = GradientAscentPartialDer
 export interface SimConfigDTO {
     id?: number;
     simConfigParamsDTO?: SimConfigParamsDTO;
-    simSet?: SimSetDTO;
-    simSetId?: number;
     orgConfigId: number;
     orgConfig?: OrgConfigDTO;
     runCount: number;
@@ -97,12 +95,8 @@ export interface SimConfigParamsDTO {
 export interface SimSetDTO {
     id?: number;
     description: string;
-    type: string;
-    simConfigs?: SimConfigDTO[];
-    state?: StateType;
-    simConfigCount?: number;
-    completedRunCount?: number;
-    completedSimConfigCount?: number;
+    modelName: string;
+    modelParams: ModelParams;
 }
 
 export interface OrgConfigDTO {
@@ -152,7 +146,6 @@ export interface ResultDTO {
     id?: number;
     simConfigId?: number;
     orgConfigId?: number;
-    simSetId?: number;
     simConfig?: SimConfigDTO;
     runCount: number;
     nodeId: string;
