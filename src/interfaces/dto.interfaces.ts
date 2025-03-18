@@ -36,7 +36,7 @@ export interface OptimiserStateDTO<T extends ConfiguratorParamData, U extends Op
     durationSec: number;
     percentComplete: number;
     status: StateType;
-    configurator: ConfiguratorParamsDTO<T>,
+    configuratorParams: ConfiguratorParamsDTO<T>,
     optimiserData: U
 }
 
@@ -50,7 +50,7 @@ export interface OptimiserStateDTO<T extends ConfiguratorParamData, U extends Op
 // performanceDelta: the change in the output for this iteration of the optimisation
 // slope: the gradient of the performance
 // configuratorId: the id of the configurator used as the current point of the optimisation
-export interface GradientAscentPartialDerivativeDTO {
+export interface GradientAscentPartialDerivativeDTO<T extends ConfiguratorParamData> {
     configuratorParameterValueName: any;
     configuratorParameterValue: any;
     x: number;
@@ -58,10 +58,11 @@ export interface GradientAscentPartialDerivativeDTO {
     performance: number | undefined;
     performanceDelta: number | undefined;
     slope: number | undefined;
+    configuratorParams: ConfiguratorParamsDTO<T>;
     status: StateType;
 }
 
-export type GradientAscentOptimiserData = GradientAscentPartialDerivativeDTO[];
+export type Gradient<T extends ConfiguratorParamData> = GradientAscentPartialDerivativeDTO<T>[];
 
 // -- CORE MODEL OBJECT DTOs -------------------------------
 export interface SimConfigDTO {
