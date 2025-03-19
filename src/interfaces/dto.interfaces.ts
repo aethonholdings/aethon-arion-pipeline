@@ -1,4 +1,10 @@
-import { ConfiguratorParamData, ModelParams, OptimiserData, RandomStreamType, StateType } from "../types/pipeline.types";
+import {
+    ConfiguratorParamData,
+    OptimiserData,
+    OptimiserParameters,
+    RandomStreamType,
+    StateType
+} from "../types/pipeline.types";
 
 // -- MODEL ----------------------------------
 // Index of all model variables
@@ -23,11 +29,21 @@ export interface ModelIndexDTO {
     };
 }
 
+export interface ModelParamsDTO {
+    name: string;
+    configurators: string[];
+    optimisers: {
+        name: string;
+        parameters: OptimiserParameters;
+    }[];
+    kpiFactories: string[];
+}
+
 // -- OPTIMISER ----------------------------------
-// model state encapsulating optimiser state
+// DTO encapsulating optimiser state
 export interface OptimiserStateDTO<T extends ConfiguratorParamData, U extends OptimiserData> {
     id?: number;
-    simSet: SimSetDTO,
+    simSet: SimSetDTO;
     stepCount: number;
     start: Date;
     end: Date;
@@ -36,8 +52,8 @@ export interface OptimiserStateDTO<T extends ConfiguratorParamData, U extends Op
     durationSec: number;
     percentComplete: number;
     status: StateType;
-    configuratorParams: ConfiguratorParamsDTO<T>,
-    optimiserData: U
+    configuratorParams: ConfiguratorParamsDTO<T>;
+    optimiserData: U;
 }
 
 // optimiser data structure specific to gradient ascent optimiser
@@ -63,6 +79,12 @@ export interface GradientAscentPartialDerivativeDTO<T extends ConfiguratorParamD
 }
 
 export type Gradient<T extends ConfiguratorParamData> = GradientAscentPartialDerivativeDTO<T>[];
+
+export interface GradientAscentParameterDTO<T> extends OptimiserParameters {
+    learningRate: number;
+    tolerance: number;
+    parameterSpaceDefinition: T;
+}
 
 // -- CORE MODEL OBJECT DTOs -------------------------------
 export interface SimConfigDTO {
@@ -96,7 +118,7 @@ export interface SimSetDTO {
     id?: number;
     description: string;
     modelName: string;
-    modelParams: ModelParams;
+    modelParams?: ModelParamsDTO;
 }
 
 export interface OrgConfigDTO {

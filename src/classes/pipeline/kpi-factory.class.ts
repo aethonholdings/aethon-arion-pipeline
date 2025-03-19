@@ -1,12 +1,13 @@
 import { KPIDTO, ResultDTO, StateSpacePointDTO } from "../../interfaces/dto.interfaces";
 import { ConfiguratorParamData } from "../../types/pipeline.types";
 import { Model } from "./model.class";
+import { OptimiserParameters } from "../../types/pipeline.types";
 
-export abstract class KPIFactory<T extends ConfiguratorParamData> {
+export abstract class KPIFactory<T extends ConfiguratorParamData, U extends OptimiserParameters> {
     protected _name: string;
-    protected _model: Model<T>;
+    protected _model: Model<T, U>;
 
-    constructor(name: string, model: Model<T>) {
+    constructor(name: string, model: Model<T, U>) {
         this._name = name;
         this._model = model;
     }
@@ -26,7 +27,7 @@ export abstract class KPIFactory<T extends ConfiguratorParamData> {
         return this._name;
     }
 
-    get model(): Model<T> {
+    get model(): Model<T, U> {
         return this._model;
     }
 }
