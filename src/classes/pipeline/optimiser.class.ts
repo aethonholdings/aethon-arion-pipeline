@@ -25,7 +25,7 @@ export abstract class Optimiser<T extends ConfiguratorParamData, U extends Optim
         return this._parameters;
     }
 
-    abstract step(state: OptimiserStateDTO<V>): OptimiserStateDTO<V>
+    abstract step(state?: OptimiserStateDTO<V>): OptimiserStateDTO<V>
 
     updateParameters(parameters: U): void {
         this._parameters = parameters;
