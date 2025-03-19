@@ -47,12 +47,12 @@ export interface OptimiserStateDTO<U extends OptimiserData> {
     stepCount: number;
     start: Date;
     end: Date;
-    modelName: string;
-    optimiserName: string;
     durationSec: number;
     percentComplete: number;
     status: StateType;
     optimiserData: U;
+    modelName?: string;
+    optimiserName?: string;
 }
 
 // optimiser data structure specific to gradient ascent optimiser
@@ -118,6 +118,7 @@ export interface SimSetDTO {
     description: string;
     modelName: string;
     modelParams?: ModelParamsDTO;
+    optimiserName?: string;
     optimiserStates?: OptimiserStateDTO<OptimiserData>[];
     state?: StateType;
 }
