@@ -31,11 +31,14 @@ export interface ModelIndexDTO {
 
 export interface ModelParamsDTO {
     name: string;
-    configurators: string[];
+    configurators: { list: string[]; default: string };
     optimisers: {
-        name: string;
-        parameters: OptimiserParameters;
-    }[];
+        list: {
+            name: string;
+            parameters: OptimiserParameters;
+        }[];
+        default: string;
+    };
     kpiFactories: string[];
 }
 

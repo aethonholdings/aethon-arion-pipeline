@@ -169,13 +169,19 @@ export abstract class Model<T extends ConfiguratorParamData, U extends Optimiser
     getParameters(): ModelParamsDTO {
         return {
             name: this._name,
-            configurators: this._configurators.map((configurator) => configurator.name),
-            optimisers: this._optimisers.map((optimiser) => {
-                return {
-                    name: optimiser.name,
-                    parameters: optimiser.parameters
-                };
-            }),
+            configurators: {
+                list: this._configurators.map((configurator) => configurator.name),
+                default: this.getDefaultConfigurator().name
+            },
+            optimisers: {
+                list: this._optimisers.map((optimiser) => {
+                    return {
+                        name: optimiser.name,
+                        parameters: optimiser.parameters
+                    };
+                }),
+                default: this.getDefaultOptimiser().name
+            },
             kpiFactories: this._kpiFactories.map((kpiFactory) => kpiFactory.name)
         };
     }
