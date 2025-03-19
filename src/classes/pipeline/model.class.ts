@@ -107,6 +107,11 @@ export abstract class Model<T extends ConfiguratorParamData, U extends Optimiser
         return this._configurators;
     }
 
+    // return the model optimisers
+    get optimisers(): Optimiser<T, U>[] {
+        return this._optimisers;
+    }
+
     // return the KPI factories
     get kpiFactories(): KPIFactory<T, U>[] {
         return this._kpiFactories;
@@ -132,6 +137,14 @@ export abstract class Model<T extends ConfiguratorParamData, U extends Optimiser
             return this.configurators[0];
         }
         throw new Error("No default configurator found");
+    }
+
+    // get the default optimiser
+    getDefaultOptimiser(): Optimiser<T, U> {
+        if (this._optimisers[0]) {
+            return this._optimisers[0];
+        }
+        throw new Error("No default optimiser found");
     }
 
     // access a specific KPI factory
