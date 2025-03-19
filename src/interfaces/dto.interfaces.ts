@@ -100,6 +100,7 @@ export interface SimConfigDTO {
     avgPerformance?: number;
     stdDevPerformance?: number;
     entropy?: number;
+    saveStateSpace?: boolean;
     results?: ResultDTO[];
     debug?: string[];
     state?: StateType;
