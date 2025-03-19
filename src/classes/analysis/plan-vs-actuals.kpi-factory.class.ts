@@ -1,13 +1,14 @@
 import { KPIDTO, KPIs, ResultDTO } from "../../interfaces/dto.interfaces";
-import { ConfiguratorParamData, OptimiserParameters } from "../../types/pipeline.types";
+import { ConfiguratorParamData, OptimiserData, OptimiserParameters } from "../../types/pipeline.types";
 import { KPIFactory } from "../pipeline/kpi-factory.class";
 import { Model } from "../pipeline/model.class";
 
 export abstract class PlanVsActualsKPIFactory<
     T extends ConfiguratorParamData,
-    U extends OptimiserParameters
-> extends KPIFactory<T, U> {
-    constructor(name: string, model: Model<T, U>) {
+    U extends OptimiserParameters,
+    V extends OptimiserData
+> extends KPIFactory<T, U, V> {
+    constructor(name: string, model: Model<T, U, V>) {
         super(name, model);
     }
     abstract generate(inputData: ResultDTO): KPIDTO<PlanVsActualsKPIs>;

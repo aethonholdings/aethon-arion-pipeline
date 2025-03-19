@@ -6,18 +6,18 @@ import {
     ModelIndexDTO,
     ModelParamsDTO
 } from "../../interfaces/dto.interfaces";
-import { ConfiguratorParamData, OptimiserParameters } from "../../types/pipeline.types";
+import { ConfiguratorParamData, OptimiserData, OptimiserParameters } from "../../types/pipeline.types";
 import { map, Observable, reduce } from "rxjs";
 import { Configurator } from "./configurator.class";
 import { KPIFactory } from "./kpi-factory.class";
 import { Optimiser } from "./optimiser.class";
 
-export abstract class Model<T extends ConfiguratorParamData, U extends OptimiserParameters> {
+export abstract class Model<T extends ConfiguratorParamData, U extends OptimiserParameters, V extends OptimiserData> {
     protected _name: string;
     protected _index: ModelIndexDTO;
-    protected _kpiFactories: KPIFactory<T, U>[];
-    protected _configurators: Configurator<T, U>[];
-    protected _optimisers: Optimiser<T, U>[];
+    protected _kpiFactories: KPIFactory<T, U, V>[];
+    protected _configurators: Configurator<T, U, V>[];
+    protected _optimisers: Optimiser<T, U, V>[];
 
     constructor(name: string, index: ModelIndexDTO) {
         this._name = name;
@@ -103,17 +103,17 @@ export abstract class Model<T extends ConfiguratorParamData, U extends Optimiser
     }
 
     // return the model configurators
-    get configurators(): Configurator<T, U>[] {
+    get configurators(): Configurator<T, U, V>[] {
         return this._configurators;
     }
 
     // return the model optimisers
-    get optimisers(): Optimiser<T, U>[] {
+    get optimisers(): Optimiser<T, U, V>[] {
         return this._optimisers;
     }
 
     // return the KPI factories
-    get kpiFactories(): KPIFactory<T, U>[] {
+    get kpiFactories(): KPIFactory<T, U, V>[] {
         return this._kpiFactories;
     }
 
@@ -123,7 +123,7 @@ export abstract class Model<T extends ConfiguratorParamData, U extends Optimiser
     }
 
     // Get a configurator based on its name
-    getConfigurator(name: string): Configurator<T, U> {
+    getConfigurator(name: string): Configurator<T, U, V> {
         const configurator = this._configurators.find((configurator) => configurator.name === name);
         if (!configurator) {
             throw new Error("Invalid model configurator name");
@@ -132,7 +132,7 @@ export abstract class Model<T extends ConfiguratorParamData, U extends Optimiser
     }
 
     // get the default configurator
-    getDefaultConfigurator(): Configurator<T, U> {
+    getDefaultConfigurator(): Configurator<T, U, V> {
         if (this.configurators[0]) {
             return this.configurators[0];
         }
@@ -140,7 +140,7 @@ export abstract class Model<T extends ConfiguratorParamData, U extends Optimiser
     }
 
     // get the default optimiser
-    getDefaultOptimiser(): Optimiser<T, U> {
+    getDefaultOptimiser(): Optimiser<T, U, V> {
         if (this._optimisers[0]) {
             return this._optimisers[0];
         }
@@ -148,7 +148,7 @@ export abstract class Model<T extends ConfiguratorParamData, U extends Optimiser
     }
 
     // access a specific KPI factory
-    getKPIFactory(name: string): KPIFactory<T, U> {
+    getKPIFactory(name: string): KPIFactory<T, U, V> {
         const kpiFactory = this._kpiFactories.find((kpiFactory) => kpiFactory.name === name);
         if (!kpiFactory) {
             throw new Error(`KPI factory ${name} not found`);
@@ -157,7 +157,7 @@ export abstract class Model<T extends ConfiguratorParamData, U extends Optimiser
     }
 
     // Return the optimiser for gradient ascent and descent manipulation
-    getOptimiser(name: string): Optimiser<T, U> {
+    getOptimiser(name: string): Optimiser<T, U, V> {
         const optimiser = this._optimisers.find((optimiser) => optimiser.name === name);
         if (!optimiser) {
             throw new Error(`Optimiser ${name} not found`);
