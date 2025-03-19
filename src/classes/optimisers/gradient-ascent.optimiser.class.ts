@@ -1,11 +1,11 @@
-import { Gradient, GradientAscentParameterDTO } from "../../interfaces/dto.interfaces";
+import { GradientAscentParameterDTO } from "../../interfaces/dto.interfaces";
 import { ConfiguratorParamData, OptimiserData } from "../../types/pipeline.types";
 import { Model } from "../pipeline/model.class";
 import { Optimiser } from "../pipeline/optimiser.class";
 
 export abstract class GradientAscentOptimiser<
     T extends ConfiguratorParamData,
-    U extends GradientAscentParameterDTO<any>,
+    U extends GradientAscentParameterDTO<any, any>,
     V extends OptimiserData
 > extends Optimiser<T, U, V> {
     protected _boundIndices = {
@@ -18,9 +18,6 @@ export abstract class GradientAscentOptimiser<
         this._checkBounds();
     }
 
-    public abstract getGradient(configuratorParamData: T): Gradient<T>;
-    public abstract getNextPoint(configuratorParamData: T, gradient: Gradient<T>): T;
-    public abstract testConvergence(gradient: Gradient<T>): boolean;
     protected abstract _checkBounds(): void;
     protected abstract _validateConfiguratorParamData(configuratorParamData: any): void;
 }

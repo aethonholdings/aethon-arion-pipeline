@@ -44,15 +44,22 @@ export interface ModelParamsDTO {
 export interface OptimiserStateDTO<U extends OptimiserData> {
     id?: number;
     simSet: SimSetDTO;
-    stepCount: number;
-    start: Date;
-    end: Date;
-    durationSec: number;
-    percentComplete: number;
+    stepCount?: number;
+    start?: Date;
+    end?: Date;
+    durationSec?: number;
+    percentComplete?: number;
     status: StateType;
     optimiserData: U;
     modelName?: string;
-    optimiserName?: string;
+    optimiserName: string;
+    converged: boolean;
+}
+
+export interface GradientAscentOptimiserStateData<T extends ConfiguratorParamData> extends OptimiserData {
+    x: T;
+    hash: string;
+    gradient: Gradient<T>;
 }
 
 // optimiser data structure specific to gradient ascent optimiser
@@ -68,21 +75,24 @@ export interface OptimiserStateDTO<U extends OptimiserData> {
 export interface GradientAscentPartialDerivativeDTO<T extends ConfiguratorParamData> {
     configuratorParameterValueName: any;
     configuratorParameterValue: any;
-    x: number;
+    xPlusDelta: number;
     xDelta: number;
-    performance: number | undefined;
-    performanceDelta: number | undefined;
-    slope: number | undefined;
-    configuratorParams: ConfiguratorParamsDTO<T>;
+    performance: number | null;
+    performanceDelta: number | null;
+    slope: number | null;
+    configuratorParams: T;
+    hash: string;
     status: StateType;
 }
 
 export type Gradient<T extends ConfiguratorParamData> = GradientAscentPartialDerivativeDTO<T>[];
 
-export interface GradientAscentParameterDTO<T> extends OptimiserParameters {
+export interface GradientAscentParameterDTO<T, U> extends OptimiserParameters {
     learningRate: number;
     tolerance: number;
+    maxIterations?: number;
     parameterSpaceDefinition: T;
+    derivativeStepSizes: U;
 }
 
 // -- CORE MODEL OBJECT DTOs -------------------------------
