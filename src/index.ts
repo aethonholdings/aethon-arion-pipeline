@@ -7,6 +7,9 @@ export * from "./types/pipeline.types"; // types
 // interfaces
 export * from "./interfaces/dto.interfaces"; // core
 
+// constants
+export * from "./constants/pipeline.constants"; // constants
+
 // classes
 export * from "./classes/api/api.class";
 export * from "./classes/pipeline/configurator.class";
