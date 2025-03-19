@@ -41,7 +41,7 @@ export interface ModelParamsDTO {
 
 // -- OPTIMISER ----------------------------------
 // DTO encapsulating optimiser state
-export interface OptimiserStateDTO<T extends ConfiguratorParamData, U extends OptimiserData> {
+export interface OptimiserStateDTO<U extends OptimiserData> {
     id?: number;
     simSet: SimSetDTO;
     stepCount: number;
@@ -52,7 +52,6 @@ export interface OptimiserStateDTO<T extends ConfiguratorParamData, U extends Op
     durationSec: number;
     percentComplete: number;
     status: StateType;
-    configuratorParams: ConfiguratorParamsDTO<T>;
     optimiserData: U;
 }
 
@@ -119,6 +118,8 @@ export interface SimSetDTO {
     description: string;
     modelName: string;
     modelParams?: ModelParamsDTO;
+    optimiserStates?: OptimiserStateDTO<OptimiserData>[];
+    state?: StateType;
 }
 
 export interface OrgConfigDTO {
