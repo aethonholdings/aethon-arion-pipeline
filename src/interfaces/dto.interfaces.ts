@@ -104,6 +104,8 @@ export interface SimConfigDTO {
     simConfigParamsDTO?: SimConfigParamsDTO;
     orgConfigId: number;
     orgConfig?: OrgConfigDTO;
+    convergenceTestId: number;
+    convergenceTest?: ConvergenceTestDTO;
     runCount: number;
     days: number;
     randomStreamType: RandomStreamType;
@@ -219,6 +221,7 @@ export interface ConvergenceTestDTO {
     stdDevPerformance: number;
     processingTimeSec: number;
     state: StateType;
+    simConfigs?: SimConfigDTO[];
 }
 
 export interface ConfiguratorParamsDTO<T extends ConfiguratorParamData> {
