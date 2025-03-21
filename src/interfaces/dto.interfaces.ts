@@ -121,10 +121,11 @@ export interface SimConfigDTO {
 
 export interface SimConfigParamsDTO {
     id?: number;
-    convergenceTests: ConvergenceTestDTO[];
     simConfigs: SimConfigDTO[];
     days: number;
     randomStreamType: RandomStreamType;
+    simSets?: SimSetDTO[];
+    convergenceTests?: ConvergenceTestDTO[];
 }
 
 export interface SimSetDTO {
@@ -134,6 +135,7 @@ export interface SimSetDTO {
     modelParams?: ModelParamsDTO;
     optimiserName?: string;
     optimiserStates?: OptimiserStateDTO<OptimiserData>[];
+    simConfigParams: SimConfigParamsDTO;
     state?: StateType;
 }
 
