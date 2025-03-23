@@ -222,6 +222,7 @@ export interface ConvergenceTestDTO {
     processingTimeSec: number;
     state: StateType;
     simConfigs?: SimConfigDTO[];
+    converged: boolean;
 }
 
 export interface ConfiguratorParamsDTO<T extends ConfiguratorParamData> {
