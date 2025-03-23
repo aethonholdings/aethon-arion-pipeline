@@ -2,9 +2,13 @@ import { OptimiserStateDTO } from "../../interfaces/dto.interfaces";
 import { ConfiguratorParamData, OptimiserData, OptimiserParameters } from "../../types/pipeline.types";
 import { Model } from "./model.class";
 
-export abstract class Optimiser<T extends ConfiguratorParamData, U extends OptimiserParameters, V extends OptimiserData> {
+export abstract class Optimiser<
+    T extends ConfiguratorParamData,
+    U extends OptimiserParameters,
+    V extends OptimiserData
+> {
     protected _name: string;
-    protected _model: Model<T, U, V>
+    protected _model: Model<T, U, V>;
     protected _parameters: U;
 
     constructor(name: string, model: Model<T, U, V>, parameters: U) {
@@ -29,6 +33,8 @@ export abstract class Optimiser<T extends ConfiguratorParamData, U extends Optim
         this._parameters = parameters;
     }
 
-    abstract step(state?: OptimiserStateDTO<V>): OptimiserStateDTO<V>
-    abstract getStateRequiredSimConfigs(state: OptimiserStateDTO<V>): ConfiguratorParamData[];
+    abstract step(state?: OptimiserStateDTO<V>): OptimiserStateDTO<V>;
+    abstract getStateRequiredConfiguratorParams(
+        state: OptimiserStateDTO<V>
+    ): { multipleOrgConfigs: boolean; configuratorParamData: ConfiguratorParamData }[];
 }

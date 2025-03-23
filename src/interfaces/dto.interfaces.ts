@@ -229,6 +229,7 @@ export interface ConfiguratorParamsDTO<T extends ConfiguratorParamData> {
     id?: number;
     modelName: string;
     configuratorName: string;
+    multipleOrgConfigs: boolean;
     data: T;
     hash?: string;
 }
