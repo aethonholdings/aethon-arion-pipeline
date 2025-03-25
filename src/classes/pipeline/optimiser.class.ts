@@ -1,4 +1,4 @@
-import { OptimiserStateDTO } from "../../interfaces/dto.interfaces";
+import { ConvergenceTestDTO, OptimiserStateDTO } from "../../interfaces/dto.interfaces";
 import { ConfiguratorParamData, OptimiserData, OptimiserParameters } from "../../types/pipeline.types";
 import { Model } from "./model.class";
 
@@ -33,7 +33,10 @@ export abstract class Optimiser<
         this._parameters = parameters;
     }
 
-    abstract step(state?: OptimiserStateDTO<V>): OptimiserStateDTO<V>;
+    abstract initialise(): OptimiserStateDTO<V>;
+    abstract update(state: OptimiserStateDTO<V>, results?: ConvergenceTestDTO[]): OptimiserStateDTO<V>;
+    abstract step(state: OptimiserStateDTO<V>): OptimiserStateDTO<V>;
+
     abstract getStateRequiredConfiguratorParams(
         state: OptimiserStateDTO<V>
     ): { multipleOrgConfigs: boolean; configuratorParamData: ConfiguratorParamData }[];

@@ -61,7 +61,6 @@ export interface OptimiserStateDTO<U extends OptimiserData> {
 
 export interface GradientAscentOptimiserStateData<T extends ConfiguratorParamData> extends OptimiserData {
     x: T;
-    hash: string;
     gradient: Gradient<T>;
 }
 
@@ -84,7 +83,6 @@ export interface GradientAscentPartialDerivativeDTO<T extends ConfiguratorParamD
     performanceDelta: number | null;
     slope: number | null;
     configuratorParams: T;
-    hash: string;
     status: StateType;
 }
 
