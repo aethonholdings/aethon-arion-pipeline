@@ -37,7 +37,11 @@ export abstract class Optimiser<
     abstract update(state: OptimiserStateDTO<V>, results?: ConvergenceTestDTO[]): OptimiserStateDTO<V>;
     abstract step(state: OptimiserStateDTO<V>): OptimiserStateDTO<V>;
 
-    abstract getStateRequiredConfiguratorParams(
-        state: OptimiserStateDTO<V>
-    ): { multipleOrgConfigs: boolean; configuratorParamData: ConfiguratorParamData }[];
+    // get the required configurator parameters for the current state; will returned array of structured objects
+    // holding the ConfiguratorParameterData that will be required for all simulations the results of which will be
+    // needed as inputs to asses the gradient and x values for the optimiser
+    abstract getStateRequiredConfiguratorParams(state: OptimiserStateDTO<V>): {
+        multipleOrgConfigs: boolean;
+        configuratorParams: { configuratorParamData: ConfiguratorParamData; hash: string };
+    }[];
 }

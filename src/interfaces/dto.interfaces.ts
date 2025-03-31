@@ -1,3 +1,4 @@
+import { Configurator } from "../classes/pipeline/configurator.class";
 import {
     ConfiguratorParamData,
     OptimiserData,
@@ -55,12 +56,14 @@ export interface OptimiserStateDTO<U extends OptimiserData> {
     status: StateType;
     optimiserData: U;
     modelName?: string;
-    optimiserName: string;
+    optimiserName?: string;
+    configuratorName?: string;
     converged: boolean;
+    convergenceTests?: ConvergenceTestDTO[];
 }
 
 export interface GradientAscentOptimiserStateData<T extends ConfiguratorParamData> extends OptimiserData {
-    x: T;
+    x: GradientAscentCofiguratorParameterData<T>;
     gradient: Gradient<T>;
 }
 
@@ -82,11 +85,16 @@ export interface GradientAscentPartialDerivativeDTO<T extends ConfiguratorParamD
     performance: number | null;
     performanceDelta: number | null;
     slope: number | null;
-    configuratorParams: T;
+    configuratorParams: GradientAscentCofiguratorParameterData<T>;
     status: StateType;
 }
 
 export type Gradient<T extends ConfiguratorParamData> = GradientAscentPartialDerivativeDTO<T>[];
+
+export interface GradientAscentCofiguratorParameterData<T extends ConfiguratorParamData> { 
+    configuratorParamData: T;
+    hash: string;
+}
 
 export interface GradientAscentParameterDTO<T, U> extends OptimiserParameters {
     learningRate: number;
@@ -117,6 +125,7 @@ export interface SimConfigDTO {
     results?: ResultDTO[];
     debug?: string[];
     state?: StateType;
+    converged?: boolean;
 }
 
 export interface SimConfigParamsDTO {
@@ -137,6 +146,7 @@ export interface SimSetDTO {
     optimiserStates?: OptimiserStateDTO<OptimiserData>[];
     simConfigParams: SimConfigParamsDTO;
     state?: StateType;
+    convergenceTestIds?: number[];
 }
 
 export interface OrgConfigDTO {
@@ -201,7 +211,7 @@ export interface ResultDTO {
     performance?: number;
     stateSpace?: StateSpacePointDTO[];
     agentCount?: number;
-    orgConfigType?: string;
+    modelName?: string;
     configuratorName?: string;
     configuratorParams?: ConfiguratorParamsDTO<ConfiguratorParamData>;
 }
@@ -217,10 +227,10 @@ export interface ConvergenceTestDTO {
     dispatchedRuns: number;
     avgPerformance: number;
     stdDevPerformance: number;
-    processingTimeSec: number;
     state: StateType;
     simConfigs?: SimConfigDTO[];
     converged: boolean;
+    optimiserStates: OptimiserStateDTO<OptimiserData>[];
 }
 
 export interface ConfiguratorParamsDTO<T extends ConfiguratorParamData> {
