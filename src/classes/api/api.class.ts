@@ -50,7 +50,7 @@ export class Api {
     }
 
     private _get$(request: APIRequest): Observable<ArrayBuffer> {
-        return this._http.get(request.getURL());
+        return this._http.get(request.getURL(), request.options?.query);
     }
 
     private _post$(request: APIRequest): Observable<ArrayBuffer> {

@@ -4,3 +4,9 @@ export enum States {
     COMPLETED = "completed",
     FAILED = "failed"
 }
+export enum DomainTypes {
+    CONTINUOUS = "continuous",
+    DISCRETE = "discrete",
+    CATEGORICAL = "categorical",
+    BOOLEAN = "boolean"
+}

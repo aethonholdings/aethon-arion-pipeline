@@ -1,4 +1,3 @@
-import { Configurator } from "../classes/pipeline/configurator.class";
 import {
     ConfiguratorParamData,
     OptimiserData,
@@ -48,7 +47,7 @@ export interface ModelParamsDTO {
 export interface OptimiserStateDTO<U extends OptimiserData> {
     id?: number;
     simSet: SimSetDTO;
-    stepCount?: number;
+    stepCount: number;
     start?: Date;
     end?: Date;
     durationSec?: number;
@@ -60,48 +59,6 @@ export interface OptimiserStateDTO<U extends OptimiserData> {
     configuratorName?: string;
     converged: boolean;
     convergenceTests?: ConvergenceTestDTO[];
-}
-
-export interface GradientAscentOptimiserStateData<T extends ConfiguratorParamData> extends OptimiserData {
-    x: GradientAscentCofiguratorParameterData<T>;
-    gradient: Gradient<T>;
-}
-
-// optimiser data structure specific to gradient ascent optimiser
-// ----------------------------------
-// configuratorParameterValueName: a string ID of the configurator param used as an input to the simulations
-// configuratorParameterValue: the configurator param used as an input to the simulations
-// x: the mapped value of the param
-// xDelta: the change in the param value for this iteration of the optimisation
-// performance: the output of the simulation
-// performanceDelta: the change in the output for this iteration of the optimisation
-// slope: the gradient of the performance
-// configuratorId: the id of the configurator used as the current point of the optimisation
-export interface GradientAscentPartialDerivativeDTO<T extends ConfiguratorParamData> {
-    configuratorParameterValueName: any;
-    configuratorParameterValue: any;
-    xPlusDelta: number;
-    xDelta: number;
-    performance: number | null;
-    performanceDelta: number | null;
-    slope: number | null;
-    configuratorParams: GradientAscentCofiguratorParameterData<T>;
-    status: StateType;
-}
-
-export type Gradient<T extends ConfiguratorParamData> = GradientAscentPartialDerivativeDTO<T>[];
-
-export interface GradientAscentCofiguratorParameterData<T extends ConfiguratorParamData> { 
-    configuratorParamData: T;
-    hash: string;
-}
-
-export interface GradientAscentParameterDTO<T, U> extends OptimiserParameters {
-    learningRate: number;
-    tolerance: number;
-    maxIterations?: number;
-    parameterSpaceDefinition: T;
-    derivativeStepSizes: U;
 }
 
 // -- CORE MODEL OBJECT DTOs -------------------------------
@@ -142,11 +99,13 @@ export interface SimSetDTO {
     description: string;
     modelName: string;
     modelParams?: ModelParamsDTO;
+    configuratorName?: string;
     optimiserName?: string;
     optimiserStates?: OptimiserStateDTO<OptimiserData>[];
     simConfigParams: SimConfigParamsDTO;
     state?: StateType;
     convergenceTestIds?: number[];
+    currentOptimiserStateId?: number;
 }
 
 export interface OrgConfigDTO {
