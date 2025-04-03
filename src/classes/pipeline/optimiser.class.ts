@@ -33,7 +33,7 @@ export abstract class Optimiser<
         this._parameters = parameters;
     }
 
-    abstract initialise(): OptimiserStateDTO<V>;
+    abstract initialise(initData?: any): OptimiserStateDTO<V>;
     abstract update(state?: OptimiserStateDTO<V>, results?: ConvergenceTestDTO[]): OptimiserStateDTO<V>;
     abstract step(state?: OptimiserStateDTO<V>, results?: ConvergenceTestDTO[]): OptimiserStateDTO<V>;
 
