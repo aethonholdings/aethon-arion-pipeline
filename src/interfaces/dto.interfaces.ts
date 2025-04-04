@@ -59,6 +59,7 @@ export interface OptimiserStateDTO<U extends OptimiserData> {
     configuratorName?: string;
     converged: boolean;
     convergenceTests?: ConvergenceTestDTO[];
+    performance?: number;
 }
 
 // -- CORE MODEL OBJECT DTOs -------------------------------
@@ -98,7 +99,7 @@ export interface SimSetDTO {
     id?: number;
     description: string;
     modelName: string;
-    modelParams?: ModelParamsDTO;
+    optimiserParams?: OptimiserParameters;
     configuratorName?: string;
     optimiserName?: string;
     optimiserStates?: OptimiserStateDTO<OptimiserData>[];
