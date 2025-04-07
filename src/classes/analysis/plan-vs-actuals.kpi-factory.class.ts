@@ -5,10 +5,8 @@ import { Model } from "../pipeline/model.class";
 
 export abstract class PlanVsActualsKPIFactory<
     T extends ConfiguratorParamData,
-    U extends OptimiserParameters,
-    V extends OptimiserData
-> extends KPIFactory<T, U, V> {
-    constructor(name: string, model: Model<T, U, V>) {
+> extends KPIFactory<T> {
+    constructor(name: string, model: Model) {
         super(name, model);
     }
     abstract generate(inputData: ResultDTO): KPIDTO<PlanVsActualsKPIs>;

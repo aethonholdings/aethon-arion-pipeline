@@ -2,18 +2,17 @@ import { ConfiguratorParamData, OptimiserParameters } from "../../types/pipeline
 import { Model } from "./model.class";
 import { OrgConfigDTO } from "../../interfaces/dto.interfaces";
 import { ConfiguratorParamsDTO } from "../../interfaces/dto.interfaces";
-import { OptimiserData } from '../../types/pipeline.types';
 
-export abstract class Configurator<T extends ConfiguratorParamData, U extends OptimiserParameters, V extends OptimiserData> {
+export abstract class Configurator<T extends ConfiguratorParamData> {
     name: string;
-    protected _model: Model<T, U, V>;
+    protected _model: Model;
 
-    constructor(model: Model<T, U, V>, name: string) {
+    constructor(model: Model, name: string) {
         this._model = model;
         this.name = name;
     }
 
-    get model(): Model<T, U, V> {
+    get model(): Model {
         return this.model;
     }
 

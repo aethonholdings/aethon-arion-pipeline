@@ -3,11 +3,11 @@ import { ConfiguratorParamData, OptimiserData } from "../../types/pipeline.types
 import { Model } from "./model.class";
 import { OptimiserParameters } from "../../types/pipeline.types";
 
-export abstract class KPIFactory<T extends ConfiguratorParamData, U extends OptimiserParameters, V extends OptimiserData> {
+export abstract class KPIFactory<T extends ConfiguratorParamData> {
     protected _name: string;
-    protected _model: Model<T, U, V>;
+    protected _model: Model;
 
-    constructor(name: string, model: Model<T, U, V>) {
+    constructor(name: string, model: Model) {
         this._name = name;
         this._model = model;
     }
@@ -27,7 +27,7 @@ export abstract class KPIFactory<T extends ConfiguratorParamData, U extends Opti
         return this._name;
     }
 
-    get model(): Model<T, U, V> {
+    get model(): Model {
         return this._model;
     }
 }

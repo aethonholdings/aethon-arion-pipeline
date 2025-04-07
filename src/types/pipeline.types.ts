@@ -9,13 +9,14 @@ export type RandomStreamType = "static" | "random";
 export type DataPoint<T, U> = { id: string; data: Mapping<T, U>; status: StateType };
 export type Mapping<T, U> = { inputs: T; outputs: U };
 export type DomainType = "continuous" | "discrete" | "categorical" | "boolean";
+export type ParameterSpace = { id: string; domain: Domain }[];
 export type Domain =
     | {
           type: DomainTypes.CONTINUOUS | DomainTypes.DISCRETE;
           optimise: true;
           min: number;
           max: number;
-          derivativeStepSize: number; 
+          derivativeStepSize: number;
       }
     | {
           type: DomainTypes.CONTINUOUS | DomainTypes.DISCRETE;

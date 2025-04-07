@@ -4,7 +4,8 @@ import {
     DataPoint,
     Domain,
     OptimiserData,
-    OptimiserParameters
+    OptimiserParameters,
+    ParameterSpace
 } from "../../types/pipeline.types";
 import { Model } from "../pipeline/model.class";
 import { Optimiser } from "../pipeline/optimiser.class";
@@ -28,8 +29,8 @@ export interface GradientAscentOptimiserData<T extends ConfiguratorParamData> ex
 // slope: the gradient of the performance
 // configuratorId: the id of the configurator used as the current point of the optimisation
 export interface GradientAscentOutput {
-    id: string,
-    domain: Domain,
+    id: string;
+    domain: Domain;
     configuratorParameterValue: number | string | boolean;
     xPlusDelta: number | undefined;
     xDelta: number | undefined;
@@ -40,10 +41,8 @@ export interface GradientAscentOutput {
 
 export interface GradientAscentParameters extends OptimiserParameters {
     iterations: { learningRate: number; tolerance: number; max?: number };
-    parameterSpace: {
-        id: string;
-        domain: Domain;
-    }[];
+    parameterSpace: ParameterSpace;
+    init: { type: "random" } |  {type: "defined", config: ConfiguratorParamData }
 }
 
 export abstract class GradientAscentOptimiser<
@@ -55,43 +54,22 @@ export abstract class GradientAscentOptimiser<
         MAX: 1,
         MIN: 0
     };
-    protected _parameterKeys: string[] = [];
-    protected _parameterDomains: { [key: string]: Domain } = {};
 
-    constructor(name: string, model: Model<T, U, V>, parameters: U) {
-        super(name, model, parameters);
-        for (let parameter of this._parameters.parameterSpace) {
-            this._parameterKeys.push(parameter.id);
-            if (parameter.domain) this._parameterDomains[parameter.id] = parameter.domain;
-        }
-        this._checkBounds();
+    constructor(name: string, model: Model) {
+        super(name, model);
     }
 
-    protected _checkBounds(): void {
-        if (this._parameters.parameterSpace) {
-            this._parameterKeys.forEach((parameterKey: string) => {
-                if (
-                    this._parameterDomains[parameterKey].type !== DomainTypes.CATEGORICAL &&
-                    this._parameterDomains[parameterKey].type !== DomainTypes.BOOLEAN
-                ) {
-                    if (
-                        this._parameterDomains[`${parameterKey}.${this._boundIndices.MIN}`] >
-                        this._parameterDomains[`${parameterKey}.${this._boundIndices.MAX}`]
-                    ) {
-                        throw new Error(
-                            `The parameter space definition max must be higher than min for ${parameterKey}`
-                        );
-                    }
+    protected _checkDomains(domains: Domain[]): void {
+        domains.forEach((domain: Domain) => {
+            if (domain.type !== DomainTypes.CATEGORICAL && domain.type !== DomainTypes.BOOLEAN && domain.optimise) {
+                if (domain.min > domain.max) {
+                    throw new Error(`The parameter space definition max must be higher than min for ${domain}`);
                 }
-            });
-        } else {
-            throw this._initError();
-        }
+            }
+        });
     }
 
     protected _initError(): Error {
         return new Error("The optimiser has not been initialised");
     }
-
-    protected abstract _validateConfiguratorParamData(configuratorParamData: any): void;
 }
