@@ -15,6 +15,7 @@ const flatten = require("flat");
 // optimiser data structures specific to gradient ascent optimiser
 export interface GradientAscentOptimiserData<T extends ConfiguratorParamData> extends OptimiserData {
     dataPoints: DataPoint<ConfiguratorParamsDTO<T>, GradientAscentOutput>[];
+    moduloDel: number | undefined;
 }
 
 // Gradient ascent partial derivative ----------------------------------
@@ -27,12 +28,14 @@ export interface GradientAscentOptimiserData<T extends ConfiguratorParamData> ex
 // slope: the gradient of the performance
 // configuratorId: the id of the configurator used as the current point of the optimisation
 export interface GradientAscentOutput {
-    configuratorParameterValue?: any;
-    xPlusDelta?: number;
-    xDelta?: number;
-    performance?: number;
-    performanceDelta?: number;
-    slope?: number;
+    id: string,
+    domain: Domain,
+    configuratorParameterValue: number | string | boolean;
+    xPlusDelta: number | undefined;
+    xDelta: number | undefined;
+    performance: number | undefined;
+    performanceDelta: number | undefined;
+    slope: number | undefined;
 }
 
 export interface GradientAscentParameters extends OptimiserParameters {
