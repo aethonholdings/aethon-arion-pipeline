@@ -32,7 +32,6 @@ export type Domain =
           type: DomainTypes.CATEGORICAL;
           optimise: false;
           default: string;
-          categories: string[];
       }
     | {
           type: DomainTypes.BOOLEAN;
