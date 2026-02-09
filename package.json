@@ -4,6 +4,10 @@
   "description": "The Arion data pipeline core DTOs and assets",
   "repository": "github:aethonholdings/aethon-arion-pipeline",
   "main": "dist/index.js",
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsc",
     "format": "prettier --write \"src/**/*.ts\"",
