@@ -1,6 +1,6 @@
 {
   "name": "aethon-arion-pipeline",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "The Arion data pipeline core DTOs and assets",
   "repository": "github:aethonholdings/aethon-arion-pipeline",
   "main": "dist/index.js",
@@ -18,11 +18,13 @@
   },
   "author": "Konstantinos Dimitriou",
   "license": "MIT",
+  "dependencies": {
+    "aethon-api-types": "^0.0.4",
+    "aethon-arion-core": "^0.2.1"
+  },
   "peerDependencies": {
     "@ngify/http": "^1.5.1",
     "@types/object-hash": "^3.0.6",
-    "aethon-api-types": "^0.0.4",
-    "aethon-arion-core": "^0.2.1",
     "flat": "^5.0.2",
     "object-hash": "^3.0.0",
     "rxjs": "~7.8.1",
