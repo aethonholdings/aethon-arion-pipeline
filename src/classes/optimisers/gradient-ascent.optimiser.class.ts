@@ -295,6 +295,16 @@ export interface GradientAscentParameters extends OptimiserParameters {
          * Optional safety limit. If omitted, runs until convergence.
          */
         max?: number;
+
+        /**
+         * Maximum step size as a fraction of the parameter range.
+         *
+         * @remarks
+         * Clamps each gradient step to at most this fraction of
+         * `(domain.max - domain.min)`, preventing overshooting.
+         * Defaults to 0.05 (5%) if not specified.
+         */
+        maxStepFraction?: number;
     };
 
     /**
