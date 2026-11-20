@@ -171,7 +171,14 @@ export abstract class Configurator<T extends ConfiguratorParamData> {
      * }
      * ```
      */
-    abstract generate(configuratorParamData: ConfiguratorParamsDTO<T>): OrgConfigDTO;
+    /**
+     * Generates an organisation configuration.
+     *
+     * @param randomSeed - when given, every random draw of the configurator comes from a stream seeded with it, so
+     * the same seed reproduces the same org config, and org configs of different configurator params generated with
+     * the same seed share their random draws (common random numbers across optimiser points)
+     */
+    abstract generate(configuratorParamData: ConfiguratorParamsDTO<T>, randomSeed?: number): OrgConfigDTO;
 
     /**
      * Returns default parameter values for this configurator.

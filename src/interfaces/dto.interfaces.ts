@@ -61,7 +61,11 @@ export interface OptimiserStateDTO<U extends OptimiserData> {
 export interface SimConfigDTO {
     id?: number;
     runId?: number; // dispatch ticket id, set when the server hands the simConfig to a node for one run
-    runIndex?: number; // 1-based index of that run within the simConfig; seeds the node's random streams
+    runIndex?: number; // 1-based index of that run within the simConfig
+    // keys from which the node derives the run's random streams (RandomStreamFactory.seeded(...seedKeys)). Set by
+    // the server as [experiment seed, org config replicate, run index], so that run j of replicate k uses the same
+    // streams at every optimiser point (common random numbers for finite-difference gradients)
+    seedKeys?: number[];
     simConfigParamsDTO?: SimConfigParamsDTO;
     orgConfigId: number;
     orgConfig?: OrgConfigDTO;
@@ -85,6 +89,7 @@ export interface SimConfigDTO {
 
 export interface SimConfigParamsDTO {
     id?: number;
+    seed?: number; // base seed of the random streams of all runs under these parameters
     simConfigs: SimConfigDTO[];
     days: number;
     randomStreamType: RandomStreamType;
@@ -108,6 +113,7 @@ export interface SimSetDTO {
 
 export interface OrgConfigDTO {
     id?: number;
+    replicate?: number; // 1-based index of the org config within its convergence test; seeds its random draws
     type: string;
     clockTickSeconds: number;
     agentCount: number;
