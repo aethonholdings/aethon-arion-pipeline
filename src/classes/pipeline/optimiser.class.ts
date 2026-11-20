@@ -30,5 +30,10 @@ export abstract class Optimiser<
     // get the required configurator parameters for the current state; will returned array of structured objects
     // holding the ConfiguratorParameterData that will be required for all simulations the results of which will be
     // needed as inputs to asses the gradient and x values for the optimiser
+    /** Validates optimiser parameters; returns the list of problems found (empty when valid). */
+    validateParameters(parameters: U): string[] {
+        return [];
+    }
+
     abstract getStateRequiredConfiguratorParams(state: OptimiserStateDTO<V>): ConfiguratorParamsDTO<T>[];
 }

@@ -375,13 +375,19 @@ export class ResultSet {
      * }
      * ```
      */
+    /** Number of results excluded from the performance statistics because their performance is not a number. */
+    getExcludedCount(): number {
+        return this.results.filter(
+            (result) => !(typeof result?.performance === "number" && Number.isFinite(result.performance))
+        ).length;
+    }
+
     getPerformance(): { avgPerformance: number | null; stDevPerformance: number | null } {
         const performanceVector: number[] = [];
+        // results without a numeric performance are excluded rather than counted as 0 (see getExcludedCount)
         for (const result of this.results) {
-            if (result?.performance) {
+            if (typeof result?.performance === "number" && Number.isFinite(result.performance)) {
                 performanceVector.push(result.performance);
-            } else {
-                performanceVector.push(0);
             }
         }
         let avgPerformance: number | null = null;
@@ -389,7 +395,7 @@ export class ResultSet {
         if (performanceVector.length > 0) {
             avgPerformance = performanceVector.reduce((acc, val) => acc + val, 0) / performanceVector.length;
             const tmp = avgPerformance;
-            if (performanceVector.length > 2)
+            if (performanceVector.length >= 2)
                 stDevPerformance = Math.sqrt(
                     performanceVector
                         .reduce((acc: number[], val: number) => acc.concat((val - tmp) ** 2), [])
@@ -446,7 +452,10 @@ export class ResultSet {
         for (let i = 0; i < stateVector.length; i++) {
             let binIndex: number = 0;
             if (this.histogramBinSizes[i] !== 0) {
-                binIndex = Math.floor((stateVector[i] - this.histogramMin[i]) / this.histogramBinSizes[i]);
+                // the maximum value belongs to the last bin (floor would put it in an extra bin binCount), and a
+                // relative epsilon keeps values sitting on a bin edge from slipping into the bin below
+                const position = (stateVector[i] - this.histogramMin[i]) / this.histogramBinSizes[i];
+                binIndex = Math.min(Math.floor(position + 1e-9), this.histogramBinCount - 1);
             }
             quantisedStateVector.push(binIndex * this.histogramBinSizes[i] + this.histogramMin[i]);
         }

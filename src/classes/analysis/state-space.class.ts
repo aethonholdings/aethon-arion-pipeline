@@ -74,6 +74,11 @@ export class StateSpace extends Array<StateSpacePointDTO> {
      */
     private _agentCount: number = 0;
 
+    /** Derived arrays (map, filter, slice, concat) are plain arrays, not StateSpace instances. */
+    static get [Symbol.species](): ArrayConstructor {
+        return Array;
+    }
+
     /**
      * Creates a new StateSpace from simulation trajectory data.
      *
@@ -116,8 +121,12 @@ export class StateSpace extends Array<StateSpacePointDTO> {
      * ```
      */
     constructor(stateSpace: StateSpacePointDTO[] | undefined) {
-        if (!stateSpace) stateSpace = [];
-        super(...stateSpace);
+        // do not spread into super(): spreading passes every point as an argument (RangeError above ~120k points)
+        // and a single numeric argument would be read as an array length
+        super();
+        if (stateSpace) {
+            for (const point of stateSpace) this.push(point);
+        }
         if (this.length > 0 && this[0]?.agentStates) {
             this._agentCount = this[0].agentStates.length;
         }
@@ -411,8 +420,10 @@ export class StateSpace extends Array<StateSpacePointDTO> {
                         if (alpha !== beta) matrix[beta][alpha]++;
                     }
                 }
-                matrix[alpha][beta] = matrix[alpha][beta] / this.length;
-                if (alpha !== beta) matrix[beta][alpha] = matrix[beta][alpha] / this.length;
+                if (this.length > 0) {
+                    matrix[alpha][beta] = matrix[alpha][beta] / this.length;
+                    if (alpha !== beta) matrix[beta][alpha] = matrix[beta][alpha] / this.length;
+                }
             }
         }
         return matrix;
@@ -435,7 +446,8 @@ export class StateSpace extends Array<StateSpacePointDTO> {
      * ```
      */
     toJSON(): any {
-        return JSON.parse(JSON.stringify(this));
+        // JSON.stringify(this) would call toJSON again and recurse until the stack overflows
+        return Array.from(this);
     }
 
     /**

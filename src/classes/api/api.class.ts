@@ -382,9 +382,12 @@ export class Api {
      * ```
      */
     private _handleError(error: any) {
-        const data: any = error;
+        // log only; the caller rethrows the original error so that status codes and response bodies survive
         const message: string = error?.message || "Unknown error";
-        delete data?.error;
-        this._logger.error({ sourceObject: this._name, message: message, data: data });
+        this._logger.error({
+            sourceObject: this._name,
+            message: message,
+            data: { status: error?.status, url: error?.url, statusText: error?.statusText }
+        });
     }
 }

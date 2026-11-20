@@ -1,6 +1,6 @@
 {
   "name": "aethon-arion-pipeline",
-  "version": "0.5.5",
+  "version": "0.6.0",
   "description": "The Arion data pipeline core DTOs and assets",
   "repository": "github:aethonholdings/aethon-arion-pipeline",
   "main": "dist/index.js",
@@ -21,13 +21,12 @@
   "dependencies": {
     "@ngify/http": "^1.5.1",
     "aethon-api-types": "^0.0.4",
-    "aethon-arion-core": "^0.2.1",
-    "xhr2": "^0.2.1"
+    "aethon-arion-core": "^0.3.0",
+    "xhr2": "^0.2.1",
+    "object-hash": "^3.0.0",
+    "flat": "^5.0.2"
   },
   "peerDependencies": {
-    "@types/object-hash": "^3.0.6",
-    "flat": "^5.0.2",
-    "object-hash": "^3.0.0",
     "rxjs": "~7.8.1"
   },
   "devDependencies": {
@@ -43,6 +42,7 @@
     "jasmine-reporters": "^2.5.2",
     "prettier": "^3.2.4",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.2"
+    "typescript": "^5.5.2",
+    "@types/object-hash": "^3.0.6"
   }
 }

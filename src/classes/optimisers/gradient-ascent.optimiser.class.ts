@@ -500,37 +500,63 @@ export abstract class GradientAscentOptimiser<
      * @protected
      */
     protected _checkDomains(domains: Domain[]): void {
-        domains.forEach((domain: Domain) => {
-            if (domain.type !== DomainTypes.CATEGORICAL && domain.type !== DomainTypes.BOOLEAN && domain.optimise) {
-                if (domain.min > domain.max) {
-                    throw new Error(`The parameter space definition max must be higher than min for ${domain}`);
-                }
-            }
-        });
+        const errors = this.validateDomains(domains.map((domain, i) => ({ id: String(i), domain: domain })));
+        if (errors.length > 0) throw new Error(errors.join("; "));
     }
 
     /**
-     * Creates a standardized error for uninitialized optimiser access.
-     *
-     * @returns Error object with descriptive message
+     * Validates a parameter space definition and returns the list of problems found (empty when valid).
      *
      * @remarks
-     * Used by subclasses to provide consistent error messages when operations
-     * are attempted before {@link initialise} has been called.
-     *
-     * **Usage Pattern:**
-     *
-     * ```typescript
-     * step(params, state, results) {
-     *   if (!state) {
-     *     throw this._initError();
-     *   }
-     *   // ... optimization logic
-     * }
-     * ```
-     *
-     * @protected
+     * Numerical domains: `min <= max`, and when optimised with `min < max`, `0 < derivativeStepSize <= max - min`.
+     * A zero-width domain (`min === max`) is allowed and treated as a fixed parameter. Categorical domains that are
+     * optimised need at least one category. Non-optimised domains need a default value.
      */
+    validateDomains(parameterSpace: ParameterSpace): string[] {
+        const errors: string[] = [];
+        for (const { id, domain } of parameterSpace) {
+            if (!domain) {
+                errors.push(`${id}: missing domain`);
+                continue;
+            }
+            if (!domain.optimise) {
+                if ((domain as any).default === undefined) errors.push(`${id}: a non-optimised domain needs a default`);
+                continue;
+            }
+            if (domain.type === DomainTypes.CONTINUOUS || domain.type === DomainTypes.DISCRETE) {
+                if (!Number.isFinite(domain.min) || !Number.isFinite(domain.max)) {
+                    errors.push(`${id}: min and max must be finite numbers`);
+                } else if (domain.min > domain.max) {
+                    errors.push(`${id}: min (${domain.min}) must not exceed max (${domain.max})`);
+                } else if (domain.min < domain.max) {
+                    if (!(domain.derivativeStepSize > 0)) {
+                        errors.push(`${id}: derivativeStepSize must be positive`);
+                    } else if (domain.derivativeStepSize > domain.max - domain.min) {
+                        errors.push(`${id}: derivativeStepSize must not exceed max - min`);
+                    }
+                }
+            } else if (domain.type === DomainTypes.CATEGORICAL) {
+                if (!Array.isArray(domain.categories) || domain.categories.length === 0) {
+                    errors.push(`${id}: an optimised categorical domain needs at least one category`);
+                }
+            }
+        }
+        return errors;
+    }
+
+    /** Validates optimiser parameters; returns the list of problems found (empty when valid). */
+    validateParameters(parameters: U): string[] {
+        const errors: string[] = [];
+        if (!parameters || !Array.isArray(parameters.parameterSpace)) return ["parameterSpace is required"];
+        if (!(parameters.iterations?.learningRate > 0)) errors.push("iterations.learningRate must be positive");
+        if (!(parameters.iterations?.tolerance >= 0)) errors.push("iterations.tolerance must be non-negative");
+        const fraction = parameters.iterations?.maxStepFraction;
+        if (fraction !== undefined && !(fraction > 0 && fraction <= 1)) {
+            errors.push("iterations.maxStepFraction must be in (0, 1]");
+        }
+        return errors.concat(this.validateDomains(parameters.parameterSpace));
+    }
+
     protected _initError(): Error {
         return new Error("The optimiser has not been initialised");
     }

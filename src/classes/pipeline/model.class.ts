@@ -11,6 +11,7 @@ import { map, Observable, reduce } from "rxjs";
 import { Configurator } from "./configurator.class";
 import { KPIFactory } from "./kpi-factory.class";
 import { Optimiser } from "./optimiser.class";
+import { ObjectHash } from "./object-hash.class";
 
 export abstract class Model {
     protected _name: string;
@@ -19,8 +20,16 @@ export abstract class Model {
     protected _configurators: Configurator<ConfiguratorParamData>[];
     protected _optimisers: Optimiser<ConfiguratorParamData, OptimiserParameters, OptimiserData>[];
 
-    constructor(name: string, index: ModelIndexDTO) {
+    protected _version: string;
+
+    /**
+     * @param version - version of the model implementation. Bump it whenever a change alters simulation outputs,
+     * so that results produced by different implementations are never pooled (it is part of the configurator
+     * params hash, see {@link Model.hashConfiguratorParams}).
+     */
+    constructor(name: string, index: ModelIndexDTO, version: string = "1") {
         this._name = name;
+        this._version = version;
         this._index = index;
         this._configurators = [];
         this._kpiFactories = [];
@@ -38,12 +47,14 @@ export abstract class Model {
     ): Observable<ResultDTO> {
         const startTime = new Date();
         const simulation = this.createSimulation(simConfigDTO, logger, randomStreamFactory);
-        let organisation: Organisation;
-        let clockTick: number = 0;
+        // read the final state from the organisation itself rather than from the last emitted step, so that the
+        // result is well defined independently of the step stream
+        const organisation: Organisation = simulation.getOrganisation();
+        let clockTicks: number = 0;
+        const copy = <T>(value: T): T => JSON.parse(JSON.stringify(value));
         return simulation.run$().pipe(
             map((runOutput: StepOutput) => {
-                organisation = runOutput.organisation;
-                clockTick = runOutput.clockTick;
+                clockTicks = runOutput.clockTick + 1;
                 return {
                     clockTick: runOutput.clockTick,
                     board: runOutput.organisation.getBoard().getPlan().reporting,
@@ -54,24 +65,26 @@ export abstract class Model {
                 } as StateSpacePointDTO;
             }),
             reduce((stateSpace: StateSpacePointDTO[], stateSpacePoint: StateSpacePointDTO) => {
-                if (saveStateSpace) stateSpace.push(JSON.parse(JSON.stringify(stateSpacePoint)));
+                if (saveStateSpace) stateSpace.push(copy(stateSpacePoint));
                 return stateSpace;
             }, [] as StateSpacePointDTO[]),
             map((results: StateSpacePointDTO[]) => {
                 const endTime = new Date();
+                // copies: the organisation's tensors are live simulation state and must not leak into the DTO
                 const resultDTO = {
                     simConfigId: simConfigDTO.id,
+                    runId: simConfigDTO.runId,
                     runCount: simConfigDTO.runCount,
                     nodeId: calculationNodeId,
                     start: startTime,
                     end: endTime,
-                    clockTick: clockTick,
+                    clockTick: clockTicks,
                     durationSec: (endTime.getTime() - startTime.getTime()) / 1000,
-                    agentStates: organisation.getAgents().getAgentStateArray(),
-                    board: organisation.getBoard().getPlan().reporting,
-                    plant: organisation.getPlant().getStateTensor(),
-                    reporting: organisation.getReporting().getReportingTensor(),
-                    priorityTensor: organisation.getAgents().getTensors().priorityTensor,
+                    agentStates: copy(organisation.getAgents().getAgentStateArray()),
+                    board: copy(organisation.getBoard().getPlan().reporting),
+                    plant: copy(organisation.getPlant().getStateTensor()),
+                    reporting: copy(organisation.getReporting().getReportingTensor()),
+                    priorityTensor: copy(organisation.getAgents().getTensors().priorityTensor),
                     stateSpace: results
                 } as ResultDTO;
                 resultDTO.performance = this.getPerformance(resultDTO);
@@ -79,6 +92,7 @@ export abstract class Model {
             })
         );
     }
+
 
     // Create a simulation instance based on the sim and org configurations
     createSimulation(simConfigDTO: SimConfigDTO, logger: Logger, randomStreamFactory: RandomStreamFactory): Simulation {
@@ -118,6 +132,22 @@ export abstract class Model {
     }
 
     // Return the name of the model, which functions as its identifier
+    get version(): string {
+        return this._version;
+    }
+
+    /**
+     * Canonical hash identifying a set of configurator parameters for this model and model version.
+     */
+    hashConfiguratorParams(configuratorName: string, data: ConfiguratorParamData): string {
+        return new ObjectHash({
+            modelName: this._name,
+            modelVersion: this._version,
+            configuratorName: configuratorName,
+            data: data
+        }).toString();
+    }
+
     get name(): string {
         return this._name;
     }
@@ -169,6 +199,7 @@ export abstract class Model {
     getParameters(): ModelParamsDTO {
         return {
             name: this._name,
+            version: this._version,
             configurators: {
                 list: this._configurators.map((configurator) => configurator.name),
                 default: this.getDefaultConfigurator().name

@@ -31,6 +31,7 @@ export interface ModelIndexDTO {
 
 export interface ModelParamsDTO {
     name: string;
+    version?: string;
     configurators: { list: string[]; default: string };
     optimisers: { list: string[]; default: string; };
     kpiFactories: string[];
@@ -59,6 +60,8 @@ export interface OptimiserStateDTO<U extends OptimiserData> {
 // -- CORE MODEL OBJECT DTOs -------------------------------
 export interface SimConfigDTO {
     id?: number;
+    runId?: number; // dispatch ticket id, set when the server hands the simConfig to a node for one run
+    runIndex?: number; // 1-based index of that run within the simConfig; seeds the node's random streams
     simConfigParamsDTO?: SimConfigParamsDTO;
     orgConfigId: number;
     orgConfig?: OrgConfigDTO;
@@ -148,6 +151,8 @@ export interface StateSpacePointDTO {
 
 export interface ResultDTO {
     id?: number;
+    runId?: number; // dispatch ticket answered by this result; makes posting idempotent
+    late?: boolean; // set by the server when the result arrived after its simConfig converged
     simConfigId?: number;
     orgConfigId?: number;
     simConfig?: SimConfigDTO;
@@ -190,6 +195,7 @@ export interface ConvergenceTestDTO {
 export interface ConfiguratorParamsDTO<T extends ConfiguratorParamData> {
     id?: number;
     modelName: string;
+    modelVersion?: string; // version of the model implementation; part of the hash
     configuratorName: string;
     multipleOrgConfigs: boolean;
     data: T;
