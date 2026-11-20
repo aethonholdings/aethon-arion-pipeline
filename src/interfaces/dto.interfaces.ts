@@ -114,6 +114,7 @@ export interface SimSetDTO {
 export interface OrgConfigDTO {
     id?: number;
     replicate?: number; // 1-based index of the org config within its convergence test; seeds its random draws
+    diagnostics?: { [key: string]: any }; // model-specific diagnostics computed by the configurator
     type: string;
     clockTickSeconds: number;
     agentCount: number;
@@ -196,6 +197,16 @@ export interface ConvergenceTestDTO {
     simConfigs?: SimConfigDTO[];
     converged: boolean;
     optimiserStates: OptimiserStateDTO<OptimiserData>[];
+    // per org config replicate summary, attached by the server for the optimiser (paired, common-random-number
+    // differences between optimiser points)
+    replicates?: ConvergenceTestReplicateDTO[];
+}
+
+export interface ConvergenceTestReplicateDTO {
+    replicate: number | null;
+    avgPerformance: number | null;
+    stdDevPerformance: number | null;
+    runCount: number;
 }
 
 export interface ConfiguratorParamsDTO<T extends ConfiguratorParamData> {

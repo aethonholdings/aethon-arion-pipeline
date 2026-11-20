@@ -199,6 +199,8 @@ export interface GradientAscentOutput {
      * Undefined until gradient can be calculated.
      */
     slope: number | undefined;
+    slopeStandardError?: number; // standard error of the slope estimate
+    performanceDeltaStandardError?: number; // standard error of performanceDelta (paired by replicate when possible)
 }
 
 /**
@@ -550,6 +552,8 @@ export abstract class GradientAscentOptimiser<
         if (!parameters || !Array.isArray(parameters.parameterSpace)) return ["parameterSpace is required"];
         if (!(parameters.iterations?.learningRate > 0)) errors.push("iterations.learningRate must be positive");
         if (!(parameters.iterations?.tolerance >= 0)) errors.push("iterations.tolerance must be non-negative");
+        const max = parameters.iterations?.max;
+        if (max !== undefined && !(Number.isInteger(max) && max > 0)) errors.push("iterations.max must be a positive integer");
         const fraction = parameters.iterations?.maxStepFraction;
         if (fraction !== undefined && !(fraction > 0 && fraction <= 1)) {
             errors.push("iterations.maxStepFraction must be in (0, 1]");
