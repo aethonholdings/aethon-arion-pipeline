@@ -67,3 +67,5 @@ lib/
 dist/
 data/
 .npmrc
+# sibling packages built by ci/link-siblings.sh
+/.siblings
