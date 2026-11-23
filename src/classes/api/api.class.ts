@@ -103,6 +103,9 @@ export class Api {
      */
     private _api: API;
 
+    /** Headers sent with every request (for example `Authorization`); per-request headers override them. */
+    private _headers: Record<string, string> = {};
+
     /**
      * Logger instance for error reporting.
      *
@@ -149,6 +152,29 @@ export class Api {
         });
         this._http = new HttpClient();
         this._logger = logger;
+    }
+
+    /**
+     * Sets a header sent with every request, or removes it when `value` is null or undefined.
+     *
+     * @example
+     * ```typescript
+     * api.setHeader("Authorization", `Bearer ${key}`);
+     * ```
+     */
+    setHeader(name: string, value: string | null | undefined): void {
+        if (value === null || value === undefined) delete this._headers[name];
+        else this._headers[name] = value;
+    }
+
+    /** The headers sent with every request. */
+    getHeaders(): Record<string, string> {
+        return { ...this._headers };
+    }
+
+    /** Default headers merged with the request's own headers (the request's take precedence). */
+    private _requestHeaders(request: APIRequest): Record<string, string> {
+        return { ...this._headers, ...(request.options?.headers ?? {}) };
     }
 
     /**
@@ -277,7 +303,7 @@ export class Api {
      * @internal
      */
     private _get$(request: APIRequest): Observable<ArrayBuffer> {
-        return this._http.get(request.getURL(), request.options?.query);
+        return this._http.get(request.getURL(), request.options?.query, { headers: this._requestHeaders(request) });
     }
 
     /**
@@ -293,7 +319,7 @@ export class Api {
      * @internal
      */
     private _post$(request: APIRequest): Observable<ArrayBuffer> {
-        return this._http.post(request.getURL(), request.options?.body, {});
+        return this._http.post(request.getURL(), request.options?.body, { headers: this._requestHeaders(request) });
     }
 
     /**
@@ -309,7 +335,7 @@ export class Api {
      * @internal
      */
     private _delete$(request: APIRequest): Observable<ArrayBuffer> {
-        return this._http.delete(request.getURL(), {});
+        return this._http.delete(request.getURL(), undefined, { headers: this._requestHeaders(request) });
     }
 
     /**
@@ -325,7 +351,7 @@ export class Api {
      * @internal
      */
     private _patch$(request: APIRequest): Observable<ArrayBuffer> {
-        return this._http.patch(request.getURL(), request.options?.body);
+        return this._http.patch(request.getURL(), request.options?.body, { headers: this._requestHeaders(request) });
     }
 
     /**
