@@ -35,5 +35,14 @@ export abstract class Optimiser<
         return [];
     }
 
+    /**
+     * The minimum number of org configs each convergence test of a SimSet with these parameters must run, when the
+     * optimiser needs more than the server's default (e.g. to compare two configurations precisely); undefined for
+     * the server's default.
+     */
+    requiredOrgConfigs(parameters: U): number | undefined {
+        return undefined;
+    }
+
     abstract getStateRequiredConfiguratorParams(state: OptimiserStateDTO<V>): ConfiguratorParamsDTO<T>[];
 }
